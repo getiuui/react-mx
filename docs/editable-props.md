@@ -51,6 +51,21 @@ there will be a prop definision for each 4 props:
 
 <h2 id="structure">Structure</h2>
 
+```
+ [propName]: {
+   ket: String
+   type: oneOf: String | Numeric | Object
+   default: valueOfType( String | Numeric | Object )
+   control: {
+     label: String
+     type: oneOf: Input | Textarea | UnitInput | Select | ColorPicker (etc)
+     ?options: {
+        ...  // type specific options 
+     }
+   }
+ }
+```
+
 <h2 id="types">Generic Types</h2>
 
 <h2 id="types-special">Special Types</h2>
