@@ -16,7 +16,38 @@
 
 <h2 id="defintion">Definition</h2>
 
-Editable prop definition is a convention used to describe what kind of UI input has to be used to allow the user to interract with a prop when an intance is selected
+Editable prop definition is a convention used to describe what kind of UI input has to be used to allow the user to change a prop when an intance of a component is selected.
+
+Each component sould have an associated set of editable props, one for each available props.
+
+For a given prop, the definition will describe:
+ - the type of the data
+ - the posible values / accepted values (and potentially transformations to raw input TBD)
+ - de default value
+ - the type of the input to be used
+ - the target where a prop should be applied
+ 
+##### Example
+
+for the following component: 
+```js
+const Card = ({title, content, link, backgroundColor}) => (
+  <div style={{backgroundColor}}>
+    <h1>{title}</h1>
+    <p>{content}</p>
+    <a href={link}>Access</a>
+  </div>
+)
+```
+
+there will be a prop definision for each 4 props:
+
+|        Prop       	|  Type  	|        Control       	|         default        	|               accepted values               	|
+|:-----------------:	|:------:	|:-------------------:	|:----------------------:	|:-------------------------------------------:	|
+| `title`           	| String 	| `input type="text"` 	| test title             	| any string                                  	|
+| `content`         	| String 	| `textarea`          	| test content           	| any string                                  	|
+| `link`            	| String 	| `input type="url"`  	| https://www.google.com 	| url compliant string                        	|
+| `backgroundColor` 	| String 	| `ColorPicker`       	| #ffffff                	| hex / rgba / hsl / color or html color name 	|
 
 <h2 id="structure">Structure</h2>
 
