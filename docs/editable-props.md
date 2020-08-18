@@ -27,7 +27,7 @@ Editable prop definition is a convention used to describe what kind of UI input 
 <h2 id="examples">Examples</h2>
 
 <p id="whats-next">
-  - [ ] generic structure of Ediatable props
+  - [x] generic structure of Ediatable props
   - [ ] examples in MD
   - [ ] examples is JS
     - [ ] for custom component
