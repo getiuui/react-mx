@@ -1,4 +1,7 @@
-# Editable props
+---
+id: editable-props
+title: Editable props
+---
 
 <h3 align="center">
   <a href="#defintion">Definition</a>
