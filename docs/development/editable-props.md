@@ -6,11 +6,7 @@ title: Editable props
 <h3 align="center">
   <a href="#defintion">Definition</a>
   <span> • </span>
-  <a href="#structure">Generic structure</a>
-  <span> • </span>
-  <a href="#types">Generic Types</a>
-  <span> • </span>
-  <a href="#types-special">Special Types</a>
+  <a href="#structure">Structure</a>
   <span> • </span>
   <a href="#examples">Examples</a>
   <span> • </span>
@@ -29,6 +25,7 @@ For a given prop, the definition will describe:
  - de default value
  - the type of the input to be used
  - the target where a prop should be applied
+ - weather the prop's control should be show by default in the inspector (ex: for and Image component `src` should always be show. Same, for a Link the `href` should always be visible in the inspector when selecting an instance.
  
 ##### Example
 
@@ -57,40 +54,34 @@ there will be a prop definision for each 4 props:
 ```
  [propName]: {
    ket: String
-   type: oneOf: String | Numeric | Object
-   default: valueOfType( String | Numeric | Object )
+   type: String | Numeric | Boolean | Object | Function | ReactElement | Array<T>
+   default: valueOfType( T )
    control: {
+     default: Boolean
      label: String
-     type: oneOf: Input | Textarea | UnitInput | Select | ColorPicker (etc)
+     type: Input | Textarea | UnitInput | Select | Checkbox | Switch | Radio | ToggleButton | ColorPicker | 
      ?options: {
-        ...  // type specific options 
+        ...  // control type specific options 
      }
    }
  }
 ```
 
-<h2 id="types">Generic Types</h2>
-
-<h2 id="types-special">Special Types</h2>
+Please see ControlTypes file for controlls and their options (link to be added)
 
 <h2 id="examples">Examples</h2>
 
 <h2 id="whats-next">What's next</h2>
 <p id="next">
 
-  - [ ] generic structure of Ediatable props
-  - [ ] Define types:
-    - [ ] free text (short and long)
-    - [ ] numeric
-    - [ ] object
-    - [ ] predefined options (enum based)
-    - [ ] special types:
-      - [ ] color
-      - [ ] unit (px / em / rem / %)
-      - [ ] media types
+  - [x] generic structure of Ediatable props
+  - [x] Define types
+  - [ ] add link to Control Types md
   - [ ] examples in MD
   - [ ] examples is JS
     - [ ] for custom component
+    - [ ] embeded in same file as definition (as named export)
+    - [ ] in external file as default export
     - [ ] for existing component from lib (MaterialUI, ChakraUI etc)
 
 </p>
