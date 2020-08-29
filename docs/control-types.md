@@ -46,13 +46,13 @@ They largely map to specific types defined in editable-props.md
 
 All controls accept the following options:
 
-|   Option  	|             Type            	|                           Description                           	  | default 	|
-|:---------:	|:---------------------------:	|:-----------------------------------------------------------------:	|---------	|
-| key       	| `String`                    	| Unique identifier; usually the `path` where the prop is applied 	  |         	|
-| value     	| `any` - control-specific    	| current value of the prop                                       	  |         	|
-| required  	| `Boolean`                   	| Flag that indicates if a value is required for the prop         	  | `false` 	|
-| validate  	| `String \| Function`        	| Function or a predefined String - see [Validators](#validtors)     	|         	|
-| transform 	| `String \| Function`        	| Function or a predefined String - see [Transformers](#transformers)	| `trim`  	|
+|  Option   |           Type           |                             Description                             | default |
+| :-------: | :----------------------: | :-----------------------------------------------------------------: | ------- |
+|    key    |         `String`         |   Unique identifier; usually the `path` where the prop is applied   |         |
+|   value   | `any` - control-specific |                      current value of the prop                      |         |
+| required  |        `Boolean`         |       Flag that indicates if a value is required for the prop       | `false` |
+| validate  |   `String \| Function`   |   Function or a predefined String - see [Validators](#validtors)    |         |
+| transform |   `String \| Function`   | Function or a predefined String - see [Transformers](#transformers) | `trim`  |
 
 # Controls
 
@@ -64,28 +64,27 @@ Variants: `text` (default), `email`, `password`, `url`, `number`
 
 #### Input Options:
 
-| Option      	| Type               	| Description                           	| default 	|
-|:------------:	|:-------------------:|:--------------------------------------:	|---------	|
-| value       	| `String \| Number` 	| current value of prop                 	|         	|
-| placeholder 	| `String`           	| string to show when no value is added 	|         	|
- 
+|   Option    |        Type        |              Description              | default |
+| :---------: | :----------------: | :-----------------------------------: | ------- |
+|    value    | `String \| Number` |         current value of prop         |         |
+| placeholder |      `String`      | string to show when no value is added |         |
+
 ## Textarea
 
 control used for props that reauire longer text values
 
 #### Textarea Options:
 
-| Option      	| Type               	| Description                           	| default 	|
-|:------------:	|:-------------------:|:--------------------------------------:	|---------	|
-| value       	| `String \| Number` 	| current value of prop                 	|         	|
-| placeholder 	| `String`           	| string to show when no value is added 	|         	|
-| colls 	      | `Number`           	| number of input columns                	|         	|
-| rows 	        | `Number`           	| number of input rows                   	|    `4`   	|
-
+|   Option    |        Type        |              Description              | default |
+| :---------: | :----------------: | :-----------------------------------: | ------- |
+|    value    | `String \| Number` |         current value of prop         |         |
+| placeholder |      `String`      | string to show when no value is added |         |
+|    colls    |      `Number`      |        number of input columns        |         |
+|    rows     |      `Number`      |         number of input rows          | `4`     |
 
 ## UnitInput
 
-```TBD in Milestone 2```
+`TBD in Milestone 2`
 
 ## Select
 
@@ -110,11 +109,11 @@ control used to chose from multiple text based predefined values
 
 control used to chose from multiple icon based predefined values
 
-```TBD in Milestone 2```
+`TBD in Milestone 2`
 
 ## ColorPicker
 
-```TBD in Milestone 2```
+`TBD in Milestone 2`
 
 # Validators
 
@@ -132,13 +131,13 @@ The values are kebab-case names of validators, with the `is` string stripped.
 
 Examples:
 
- - `alpha => isAlpha`
- - `alphanumeric => isAlphanumeric`
- - `int => isInt`
- - `mobile-phone => isMobilePhone`
- - `data-uri => isDataURI`
- - `hex-color => isHexColor`
- - ` function(input) { return input !== 'test' } `
+- `alpha => isAlpha`
+- `alphanumeric => isAlphanumeric`
+- `int => isInt`
+- `mobile-phone => isMobilePhone`
+- `data-uri => isDataURI`
+- `hex-color => isHexColor`
+- `function(input) { return input !== 'test' }`
 
 # Transformers
 
@@ -149,8 +148,8 @@ T
 #### Custom Function
 
 # What's next
-<p id="next">
 
+<p id="next">
   - [x] General
   - [ ] Input (text, email, url)
   - [ ] Textarea

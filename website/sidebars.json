@@ -1,19 +1,17 @@
 {
   "docs": [
     {
-      "type":"category",
+      "type": "category",
       "label": "About",
-      "items": [ "about/what-is-reactmx", "about/features"]
-    }, {
-      "type":"category",
-      "label": "Getting Started",
-      "items": ["getting-started/installation", "getting-started/configuration"]
+      "items": ["about/what-is-reactmx", "about/features"]
     },
     {
       "type": "category",
-      "label": "Development",
-      "items": ["development/editable-props"]
+      "label": "Getting Started",
+      "items": ["getting-started/installation", "getting-started/configuration"]
     },
+    "editable-props",
+    "control-types",
     "whats-next"
   ]
 }
