@@ -1,15 +1,9 @@
 {
   "docs": [
-    {
-      "type": "category",
-      "label": "About",
-      "items": ["about/what-is-reactmx", "about/features"]
-    },
-    {
-      "type": "category",
-      "label": "Getting Started",
-      "items": ["getting-started/installation", "getting-started/configuration"]
-    },
+    "what-is-reactmx",
+    "features",
+    "installation",
+    "configuration",
     "editable-props",
     "control-types",
     "whats-next"
