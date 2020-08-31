@@ -23,6 +23,14 @@
 
   --ifm-navbar-link-color: #fff;
   --ifm-heading-font-weight: var(--ifm-font-weight-base);
+  --ifm-toc-border-color: #e1e1e1;
+
+  --ifm-h1-font-size: 1.5rem;
+  --ifm-h2-font-size: 1.25rem;
+  --ifm-h3-font-size: 1rem;
+  --ifm-h4-font-size: 1rem;
+  --ifm-h5-font-size: 0.85rem;
+  --ifm-h6-font-size: 0.8rem;
 }
 
 .docusaurus-highlight-code-line {
@@ -38,4 +46,19 @@
 
 .menu {
   font-weight: var(--ifm-font-weight-base);
+}
+
+.markdown > h1 {
+  --ifm-h1-font-size: 2rem;
+  --ifm-h2-font-size: 1.75rem;
+  --ifm-h3-font-size: 1.5rem;
+  border-bottom: 0.5px solid var(--ifm-toc-border-color);
+}
+
+.markdown > h2 {
+  --ifm-h2-font-size: 1.5rem;
+}
+
+.markdown > h3 {
+  --ifm-h3-font-size: 1.5rem;
 }
