@@ -16,7 +16,7 @@
   --ifm-color-primary-light: #3385ff;
   --ifm-color-primary-lighter: #418dff;
   --ifm-color-primary-lightest: #6aa6ff;
-  --ifm-code-font-size: 95%;
+  --ifm-font-size-base: 95%;
 
   --ifm-table-cell-padding: 10px;
   --ifm-navbar-background-color: #050505;
@@ -31,6 +31,16 @@
   --ifm-h4-font-size: 1rem;
   --ifm-h5-font-size: 0.85rem;
   --ifm-h6-font-size: 0.8rem;
+
+  --ifm-table-border-width: 0;
+  --ifm-table-head-background: var(--ifm-color-gray-100);
+  --ifm-table-head-font-weight: var(--ifm-font-weight-semibold);
+
+  --ifm-code-background: rgba(196, 222, 255, 0.42);
+  --ifm-code-padding-vertical: 2px;
+  --ifm-code-padding-horizontal: 4px;
+  --ifm-code-font-size: 92%;
+  --ifm-code-border-radius: 4px;
 }
 
 .docusaurus-highlight-code-line {
@@ -61,4 +71,30 @@
 
 .markdown > h3 {
   --ifm-h3-font-size: 1.5rem;
+}
+
+table tr {
+  border-bottom: 1px solid var(--ifm-table-border-color);
+}
+
+/* disable stripes in tables */
+table tr:nth-child(2n) {
+  background-color: var(--ifm-table-background);
+}
+
+.prop-name {
+  font-family: "Roboto Mono", monospace;
+  font-size: 90%;
+  white-space: nowrap;
+}
+
+.prop-type {
+  color: var(--ifm-color-primary-darkest);
+  font-family: "Roboto Mono", monospace;
+  font-size: 90%;
+  white-space: nowrap;
+}
+
+.prop-desc {
+  font-size: 90%;
 }

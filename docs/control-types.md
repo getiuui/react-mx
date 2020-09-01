@@ -46,13 +46,15 @@ They largely map to specific types defined in editable-props.md
 
 All controls accept the following options:
 
-|  Option   |           Type           |                             Description                             | default |
-| :-------: | :----------------------: | :-----------------------------------------------------------------: | ------- |
-|    key    |         `String`         |   Unique identifier; usually the `path` where the prop is applied   |         |
-|   value   | `any` - control-specific |                      current value of the prop                      |         |
-| required  |        `Boolean`         |       Flag that indicates if a value is required for the prop       | `false` |
-| validate  |   `String \| Function`   |   Function or a predefined String - see [Validators](#validtors)    |         |
-| transform |   `String \| Function`   | Function or a predefined String - see [Transformers](#transformers) | `trim`  |
+| Option                                         | Type                                                  | Description                                                                                    | default |
+| :--------------------------------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------- | ------- |
+| <span class="prop-name">key</span>             | <span class="prop-type">String</span>                 | <span class="prop-desc">Unique identifier; usually the `path` where the prop is applied</span> |         |
+| <span class="prop-name">value</span>           | <span class="prop-type">any - control-specific</span> | <span class="prop-desc">current value of the prop</span>                                       |         |
+| <span class="prop-name">required</span>        | <span class="prop-type">Boolean</span>                | <span class="prop-desc">Flag that indicates if a value is required for the prop</span>         | `false` |
+| <span class="prop-name">validate</span>        | <span class="prop-type">String &#124; Function</span> | <span class="prop-desc">Function or a predefined String - see [Validators](#validtors)</span>  |         |
+| <span class="prop-name">validateParams</span>  | <span class="prop-type">any</span>                    | <span class="prop-desc">extra param or array of params to be sent to the validator</span>      |         |
+| <span class="prop-name">transform</span>       | <span class="prop-type">String &#124; Function</span> | <span class="prop-desc">Function or a predefined String - see [Transformers]</span>            |         |
+| <span class="prop-name">transformParams</span> | <span class="prop-type">any</span>                    | <span class="prop-desc">extra param or array of params to be sent to the transformer</span>    |         |
 
 # Controls
 
@@ -64,10 +66,10 @@ Variants: `text` (default), `email`, `password`, `url`, `number`
 
 #### Input Options:
 
-|   Option    |        Type        |              Description              | default |
-| :---------: | :----------------: | :-----------------------------------: | ------- |
-|    value    | `String \| Number` |         current value of prop         |         |
-| placeholder |      `String`      | string to show when no value is added |         |
+| Option                                     | Type                                            | Description                                                          | default |
+| :----------------------------------------- | :---------------------------------------------- | :------------------------------------------------------------------- | ------- |
+| <span class="prop-name">value</span>       | <span class="prop-type">String or Number</span> | <span class="prop-desc">current value of prop</span>                 |         |
+| <span class="prop-name">placeholder</span> | <span class="prop-type">String</span>           | <span class="prop-desc">string to show when no value is added</span> |         |
 
 ## Textarea
 
@@ -75,12 +77,12 @@ control used for props that reauire longer text values
 
 #### Textarea Options:
 
-|   Option    |        Type        |              Description              | default |
-| :---------: | :----------------: | :-----------------------------------: | ------- |
-|    value    | `String \| Number` |         current value of prop         |         |
-| placeholder |      `String`      | string to show when no value is added |         |
-|    colls    |      `Number`      |        number of input columns        |         |
-|    rows     |      `Number`      |         number of input rows          | `4`     |
+|                   Option                   |                      Type                       |                             Description                              | default |
+| :----------------------------------------: | :---------------------------------------------: | :------------------------------------------------------------------: | ------- |
+|    <span class="prop-name">value</span>    | <span class="prop-type">String or Number</span> |         <span class="prop-desc">current value of prop</span>         |         |
+| <span class="prop-name">placeholder</span> |      <span class="prop-type">String</span>      | <span class="prop-desc">string to show when no value is added</span> |         |
+|    <span class="prop-name">colls</span>    |      <span class="prop-type">Number</span>      |        <span class="prop-desc">number of input columns</span>        |         |
+|    <span class="prop-name">rows</span>     |      <span class="prop-type">Number</span>      |         <span class="prop-desc">number of input rows</span>          | `4`     |
 
 ## UnitInput
 
@@ -119,7 +121,7 @@ control used to chose from multiple icon based predefined values
 
 A validator is function having the following signature:
 
-```
+```typescript
 function(value: String): Boolean
 ```
 
@@ -141,11 +143,15 @@ Examples:
 
 # Transformers
 
-T
+A transformer is a function that receives a raw value of a control and returns it as a processed one.
 
-#### Predefined
+Transformer signature:
 
-#### Custom Function
+```typescript
+function(value: String, ?params: any | Array<any>): String | Number | Boolean | Object | null
+```
+
+By default, all sanitizers defined in [Validator.js](https://github.com/validatorjs/validator.js#sanitizers) are available as transformers.
 
 # What's next
 
