@@ -33,10 +33,8 @@
   --ifm-h6-font-size: 0.8rem;
 
   --ifm-table-border-width: 0;
-  --ifm-table-head-background: var(--ifm-color-gray-100);
   --ifm-table-head-font-weight: var(--ifm-font-weight-semibold);
 
-  --ifm-code-background: rgba(196, 222, 255, 0.42);
   --ifm-code-padding-vertical: 2px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-font-size: 92%;
@@ -72,9 +70,19 @@
 .markdown > h3 {
   --ifm-h3-font-size: 1.5rem;
 }
-
+table {
+  width: 100%;
+  display: table;
+}
+thead {
+  width: 100%;
+}
+tbody {
+  width: 100%;
+}
 table tr {
-  border-bottom: 1px solid var(--ifm-table-border-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  width: 100%;
 }
 
 /* disable stripes in tables */
@@ -97,4 +105,9 @@ table tr:nth-child(2n) {
 
 .prop-desc {
   font-size: 90%;
+}
+
+.docTitle_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem- {
+  text-align: center;
+  font-weight: var(--ifm-font-weight-light);
 }

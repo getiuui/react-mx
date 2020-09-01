@@ -8,7 +8,7 @@ title: Control Types
   <span> • </span>
   <a href="#controls">Controls</a>
   <span> • </span>
-  <a href="#validators">Validator</a>
+  <a href="#validators">Validators</a>
   <span> • </span>
   <a href="#transformers">Transformers</a>
   <span> • </span>
@@ -46,10 +46,10 @@ Variants: `text` (default), `email`, `password`, `url`, `number`
 
 #### Input Options:
 
-| Option                                     | Type                                            | Description                                                          | default |
-| :----------------------------------------- | :---------------------------------------------- | :------------------------------------------------------------------- | ------- |
-| <span class="prop-name">value</span>       | <span class="prop-type">String or Number</span> | <span class="prop-desc">current value of prop</span>                 |         |
-| <span class="prop-name">placeholder</span> | <span class="prop-type">String</span>           | <span class="prop-desc">string to show when no value is added</span> |         |
+| Option                                     | Type                                                | Description                                                          | default |
+| :----------------------------------------- | :-------------------------------------------------- | :------------------------------------------------------------------- | ------- |
+| <span class="prop-name">value</span>       | <span class="prop-type">String &#124; Number</span> | <span class="prop-desc">current value of prop</span>                 |         |
+| <span class="prop-name">placeholder</span> | <span class="prop-type">String</span>               | <span class="prop-desc">string to show when no value is added</span> |         |
 
 ## Textarea
 
@@ -57,12 +57,12 @@ control used for props that reauire longer text values
 
 #### Textarea Options:
 
-|                   Option                   |                      Type                       |                             Description                              | default |
-| :----------------------------------------: | :---------------------------------------------: | :------------------------------------------------------------------: | ------- |
-|    <span class="prop-name">value</span>    | <span class="prop-type">String or Number</span> |         <span class="prop-desc">current value of prop</span>         |         |
-| <span class="prop-name">placeholder</span> |      <span class="prop-type">String</span>      | <span class="prop-desc">string to show when no value is added</span> |         |
-|    <span class="prop-name">colls</span>    |      <span class="prop-type">Number</span>      |        <span class="prop-desc">number of input columns</span>        |         |
-|    <span class="prop-name">rows</span>     |      <span class="prop-type">Number</span>      |         <span class="prop-desc">number of input rows</span>          | `4`     |
+| Option                                     |                        Type                         |                             Description                              | default |
+| :----------------------------------------- | :-------------------------------------------------: | :------------------------------------------------------------------: | ------- |
+| <span class="prop-name">value</span>       | <span class="prop-type">String &#124; Number</span> |         <span class="prop-desc">current value of prop</span>         |         |
+| <span class="prop-name">placeholder</span> |        <span class="prop-type">String</span>        | <span class="prop-desc">string to show when no value is added</span> |         |
+| <span class="prop-name">colls</span>       |        <span class="prop-type">Number</span>        |        <span class="prop-desc">number of input columns</span>        |         |
+| <span class="prop-name">rows</span>        |        <span class="prop-type">Number</span>        |         <span class="prop-desc">number of input rows</span>          | `4`     |
 
 ## UnitInput
 
@@ -75,6 +75,14 @@ Best used when the number ov values is greater then 4, or the values cannot be r
 For 2-4 options, with textual representation [Radio](#radio) is recomended
 For 2-4 option, with icon representation [ToggleButton](#togglebutton) is recommended
 
+#### Select Options:
+
+| Option                                     |                                                                      Type                                                                       |                             Description                              | default |
+| :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------: | ------- |
+| <span class="prop-name">value</span>       |                                               <span class="prop-type">String &#124; Number</span>                                               |         <span class="prop-desc">current value of prop</span>         |         |
+| <span class="prop-name">placeholder</span> |                                                      <span class="prop-type">String</span>                                                      | <span class="prop-desc">string to show when no value is added</span> |         |
+| <span class="prop-name">options</span>     | <span class="prop-type">Array<String &#124; Number</span> <br />or<br /> <span class="prop-type">Object<{ value: S &#124; N, label: S }></span> |        <span class="prop-desc">number of input columns</span>        | `[]`    |
+
 ## Checkbox
 
 control used to alter boolean values (alternative to [Switch](#switch))
@@ -85,7 +93,14 @@ control used to alter boolean values (alternative to [Checkbox](#checkbox))
 
 ## Radio
 
-control used to chose from multiple text based predefined values
+control used to chose from multiple text based predefined values (alternative to [Select](#select))
+
+#### Radio Options:
+
+| Option                                 |                                                                      Type                                                                       |                      Description                       | default |
+| :------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------: | ------- |
+| <span class="prop-name">value</span>   |                                               <span class="prop-type">String &#124; Number</span>                                               |  <span class="prop-desc">current value of prop</span>  |         |
+| <span class="prop-name">options</span> | <span class="prop-type">Array<String &#124; Number</span> <br />or<br /> <span class="prop-type">Object<{ value: S &#124; N, label: S }></span> | <span class="prop-desc">number of input columns</span> | `[]`    |
 
 ## ToggleButton
 

@@ -17,6 +17,11 @@ module.exports = {
       },
       items: [
         {
+          to: "docs",
+          label: "Docs",
+          position: "right",
+        },
+        {
           href: "https://github.com/getiuui/react-mx",
           label: "GitHub",
           position: "right",
@@ -51,13 +56,17 @@ module.exports = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} ReactMX`,
     },
+    colorMode: {
+      defaultMode: "light",
+      disableSwitch: true,
+    },
   },
   presets: [
     [
       "@docusaurus/preset-classic",
       {
         docs: {
-          path: "../docs",
+          path: "./docs",
           homePageId: "what-is-reactmx",
           sidebarPath: require.resolve("./sidebars.json"),
           editUrl: "https://github.com/getiuui/react-mx",
