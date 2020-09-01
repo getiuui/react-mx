@@ -10,13 +10,13 @@
 
 <h3 align="center">
   <a href="#what-is-react-mx">React MX?</a>
-  <span> - </span>
+  <span> • </span>
   <a href="#how-it-works">How it works</a>
-  <span> - </span>
+  <span> • </span>
   <a href="#features">Features</a>
-  <span> - </span>
+  <span> • </span>
   <a href="#setup">Setup</a>
-  <span> - </span>
+  <span> • </span>
   <a href="#usage">Usage</a>
 </h3>
 
@@ -32,11 +32,11 @@ ReactMX will allow you to drag-and-drop your componets to the "stage", modify th
 
 <h2 id="features">🔥 Features</h2>
 
-- *directly integrated in your project* - ReactMX runs *inside* your project environment
-- *100% offline* - build, mock and tweak your components from anywhere, no internet or external resources needed
-- *Preview your components* - Present your components
-- *Easy prop values manipulation* - react-mx lets you define the type of control to be used to alter a specific prop
-- *automatic prop controls* - out of the box, most common props are automatically mapped to controlls (eg: styles, children, key etc)
+- _directly integrated in your project_ - ReactMX runs _inside_ your project environment
+- _100% offline_ - build, mock and tweak your components from anywhere, no internet or external resources needed
+- _Preview your components_ - Present your components
+- _Easy prop values manipulation_ - react-mx lets you define the type of control to be used to alter a specific prop
+- _automatic prop controls_ - out of the box, most common props are automatically mapped to controlls (eg: styles, children, key etc)
 
 <h2 id="setup">🚀 Setup</h2>
 
