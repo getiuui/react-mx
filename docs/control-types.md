@@ -16,26 +16,6 @@ title: Control Types
   <span> • </span>
   <a href="#whats-next">What's next</a>
 </h3>
-<h4 align="center">
- <a href="#input">Input</a>
-  <span> • </span>
-  <a href="#textarea">Textarea</a>
-  <span> • </span>
-  <a href="#unitinput">UnitInput</a>
-  <span> • </span>
-  <a href="#select">Select</a>
-  <span> • </span>
-  <a href="#checkbox">Checkbox</a>
-  <span> • </span>
-  <a href="#switch">Switch</a>
-  <span> • </span>
-  <a href="#radio">Radio</a>
-  <span> • </span>
-  <a href="#togglebutton">ToggleButton</a>
-  <span> • </span>
-  <a href="#colorpicker">ColorPicker</a>
-  <span> • </span>
-</h4>
 
 # Overview
 
