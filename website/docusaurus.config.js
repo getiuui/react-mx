@@ -1,9 +1,11 @@
+const remarkPartials = require("remark-import-partial");
+
 module.exports = {
   title: "React MX",
   tagline: "Build React components visually",
   url: "https://github.com/getiuui/react-mx/README.md",
   baseUrl: "/",
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "getiuui",
   projectName: "ReactMX",
@@ -29,7 +31,7 @@ module.exports = {
           items: [
             {
               label: "About",
-              to: "docs/what-is-reactmd",
+              to: "docs/what-is-reactmx",
             },
             {
               label: "Features",
@@ -59,6 +61,7 @@ module.exports = {
           homePageId: "what-is-reactmx",
           sidebarPath: require.resolve("./sidebars.json"),
           editUrl: "https://github.com/getiuui/react-mx",
+          remarkPlugins: [remarkPartials],
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),

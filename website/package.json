@@ -1,6 +1,6 @@
 {
-  "name": "docs",
-  "version": "0.0.0",
+  "name": "@react-mx/docs",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -30,5 +30,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "remark-import-partial": "0.0.2"
   }
 }
