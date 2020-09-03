@@ -65,6 +65,7 @@
 
 .markdown > h2 {
   --ifm-h2-font-size: 1.5rem;
+  font-weight: var(--ifm-font-weight-semibold);
 }
 
 .markdown > h3 {

@@ -36,7 +36,7 @@ All controls accept the following options:
 | <span class="prop-name">transform</span>       | <span class="prop-type">String &#124; Function</span> | <span class="prop-desc">Function or a predefined String - see [Transformers]</span>            |         |
 | <span class="prop-name">transformParams</span> | <span class="prop-type">any</span>                    | <span class="prop-desc">extra param or array of params to be sent to the transformer</span>    |         |
 
-# Controls
+<h1 id="controls">Supported Controls</h1>
 
 ## Input
 
