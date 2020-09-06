@@ -1,12 +1,10 @@
-import dynamic from 'next/dynamic'
+import Button from '../components/Button'
+import Card, { editableProps as CardEditableProps } from '../components/Card'
 
-const Preview = dynamic(() => import('../components/preview'), {
-  ssr: false
-})
-
+import { Preview } from 'react-mx'
 const Index = () => (
   <div>
-    <Preview />
+    <Preview components={{ Button, Card }} editableProps={{ Card: CardEditableProps }} />
   </div>
 )
 

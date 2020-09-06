@@ -14,7 +14,7 @@ export type PreviewProps = {
 
 // @ts-ignore
 const Preview: React.FC<PreviewProps> = ({ components, editableProps, component }) => {
-  const [currentComponentType, setCurrentComponentType] = useState<string | null | undefined>(component)
+  const [currentComponentType, setCurrentComponentType] = useState<string | null | undefined>(null)
 
   console.log(currentComponentType, setCurrentComponentType)
 

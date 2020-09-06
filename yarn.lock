@@ -5718,6 +5718,11 @@ rollup-plugin-babel@^4.3.2:
     "@babel/helper-module-imports" "^7.0.0"
     rollup-pluginutils "^2.8.1"
 
+rollup-plugin-ignore@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-ignore/-/rollup-plugin-ignore-1.0.9.tgz#62a692d387d543395ad2fbcc443c9b3549582844"
+  integrity sha512-+Q2jmD4gbO3ByFuljkDEfpEcYvll7J5+ZadUuk/Pu35x2KGrbHxKtt3+s+dPIgXX1mG7zCxG4s/NdRqztR5Ruw==
+
 rollup-plugin-sourcemaps@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/rollup-plugin-sourcemaps/-/rollup-plugin-sourcemaps-0.4.2.tgz#62125aa94087aadf7b83ef4dfaf629b473135e87"
