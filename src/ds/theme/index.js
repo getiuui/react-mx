@@ -53,8 +53,11 @@ export const white = '#fff'
 export const black = '#000'
 export const red = '#FF1717'
 export const lightGray = '#F7F9FA'
-export const border = '#E3E5E6'
+export const backgroundGray = '#f7f6f6'
+export const lightBackgroundGray = '#fbfbfb'
 export const darkGray = '#A6ADAF'
+export const border = '#E3E5E6'
+export const lightBorder = 'rgba(0, 0, 0, 0.05)'
 
 export const brandColors = {
   brand,
@@ -67,7 +70,10 @@ export const brandColors = {
   red,
   lightGray,
   darkGray,
-  border
+  backgroundGray,
+  lightBackgroundGray,
+  border,
+  lightBorder
 }
 
 export const colors = {

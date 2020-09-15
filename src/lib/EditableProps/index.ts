@@ -1,20 +1,5 @@
-import { ReactElement } from 'react'
+import { SelectControl } from '../../components/Control/Select/types'
+import { InputControl } from '../../components/Control/Input/types'
 
-export type EditablePropType = string | number | boolean | Function | ReactElement
-
-export type EditablePropControl = {
-  default: boolean
-  label: string
-  type: any
-  options?: any
-}
-
-export type EditableProp = {
-  key: string
-  type: EditablePropType
-  control: EditablePropControl
-}
-
-export type EditableProps = {
-  [prop: string]: EditableProp
-}
+export const Select = (def: Omit<SelectControl, 'type'>): SelectControl => ({ ...def, type: 'select' })
+export const Input = (def: Omit<InputControl, 'type'>): InputControl => ({ ...def, type: 'input' })

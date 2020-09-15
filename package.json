@@ -14,6 +14,7 @@
     "node": ">=10"
   },
   "scripts": {
+    "reset-dev": "scripts/reset-dev.sh",
     "init-dev": "scripts/prepare-dev-links.sh",
     "dev": "concurrently \"npm run start\" \"npm run examples:playground:dev\"",
     "examples:playground:dev": "cd ./examples/playground && yarn dev",
@@ -36,11 +37,14 @@
   "module": "dist/react-mx.esm.js",
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
+    "@babel/register": "^7.11.5",
+    "@rollup/plugin-image": "^2.0.5",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "concurrently": "^5.3.0",
     "husky": "^4.2.5",
     "rollup-plugin-ignore": "^1.0.9",
+    "rollup-plugin-less": "^1.1.2",
     "tsdx": "^0.13.3",
     "tslib": "^2.0.1",
     "typescript": "^4.0.2"
@@ -51,8 +55,13 @@
     "@chakra-ui/system": "^1.0.0-next.3",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
+    "@types/react-panelgroup": "^1.0.1",
+    "antd": "^4.6.4",
+    "emotion": "^10.0.27",
     "emotion-theming": "^10.0.27",
+    "js-convert-case": "^4.1.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-panelgroup": "^1.0.12"
   }
 }

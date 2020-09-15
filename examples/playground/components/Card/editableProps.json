@@ -1,49 +1,36 @@
 {
   "title": {
-    "key": "title",
-    "type": "String",
+    "type": "input",
+    "valueType": "String",
     "default": "Card Title",
-    "control": {
-      "type": "input",
-      "default": true,
-      "label": "Title",
-      "options": {
-        "placeholder": "enter card title"
-      }
+    "isVisibleByDefault": true,
+    "label": "Title",
+    "controlProps": {
+      "placeholder": "enter card title"
     }
   },
   "content": {
-    "key": "content",
-    "type": "String",
+    "type": "input",
+    "valueType": "String",
     "default": null,
-    "control": {
-      "type": "input",
-      "default": true,
-      "label": "Content"
-    }
+    "defaultValue": "Card Content",
+    "label": "Content"
   },
   "width": {
-    "key": "width",
-    "type": "Number",
+    "type": "input",
+    "valueType": "Number",
     "default": 100,
-    "control": {
-      "type": "input",
-      "label": "Width",
-      "options": {
-        "type": "number",
-        "placeholder": "width"
-      }
+    "label": "Width",
+    "controlProps": {
+      "type": "text"
     }
   },
   "height": {
-    "key": "width",
-    "type": "Number",
+    "type": "input",
+    "valueType": "Number",
     "default": 30,
-    "control": {
-      "type": "input",
-      "options": {
-        "type": "number"
-      }
+    "controlProps": {
+      "type": "text"
     }
   }
 }
