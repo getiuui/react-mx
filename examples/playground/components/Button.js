@@ -1,4 +1,4 @@
-import { Input } from 'react-mx'
+import { Input as MXInput } from 'react-mx'
 const Button = ({ text = 'Button', width = 100, height = 30, disabled }) => (
   <button disabled={disabled} style={{ width, height }}>
     {text}
@@ -6,19 +6,16 @@ const Button = ({ text = 'Button', width = 100, height = 30, disabled }) => (
 )
 
 Button.editableProps = {
-  text: Input({
+  text: MXInput({
     default: 'Button',
     valueType: String,
     isVisibleByDefault: true
   }),
-  width: Input({
+  width: MXInput({
     valueType: Number,
-    default: 100,
-    controlProps: {
-      type: 'number'
-    }
+    default: 100
   }),
-  height: Input({
+  height: MXInput({
     valueType: Number,
     default: 30,
     controlProps: {
