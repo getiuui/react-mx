@@ -4,7 +4,7 @@ import { SelectControl, SelectType } from './types'
 import Select, { SelectProps, SelectValue } from 'antd/lib/select'
 
 type SelectControlProps = Omit<SelectControl, 'key' | 'type'> &
-  Omit<SelectProps<SelectValue>, 'options'> & {
+  Omit<SelectProps<SelectValue>, 'options' | 'defaultValue'> & {
     propKey?: string
     type?: SelectType
     id?: string

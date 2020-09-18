@@ -4,7 +4,7 @@ import Input, { InputProps } from 'antd/lib/input'
 import { InputControl, InputType } from './types'
 
 type InoutControlProps = Omit<InputControl, 'key' | 'type'> &
-  InputProps & {
+  Omit<InputProps, 'defaultValue'> & {
     propKey?: string
     type?: InputType
     id?: string

@@ -63,6 +63,9 @@ const Preview: React.FC<PreviewProps> = ({ components, editableProps, component,
   const CurrentComponent: any =
     currentComponentType && components && components[currentComponentType] ? components[currentComponentType] : null
 
+  // @ts-ignore
+  // console.log('aaaa', typeof ComponentProps<CurrentComponent>)
+
   const currentEditableProps =
     currentComponentType && editableProps && editableProps[currentComponentType]
       ? editableProps[currentComponentType]
