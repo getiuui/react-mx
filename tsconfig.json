@@ -1,20 +1,13 @@
 {
-  "include": ["src", "types"],
+  "extends": "./tsconfig.build.json",
+  "include": ["packages", "types"],
   "compilerOptions": {
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "importHelpers": true,
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": "./src",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "jsx": "react",
-    "esModuleInterop": true
+    "allowJs": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "paths": {
+      "react-mx": ["packages/react-mx/src"],
+      "@react-mx/parser": ["packages/react-mx-parser/src"],
+      "@react-mx/webpack-plugin": ["packages/react-mx-webpack-plugin/src"]
+    }
   }
 }

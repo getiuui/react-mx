@@ -1,4 +1,4 @@
-const { WebpackReactMXWatchPlugin } = require('react-mx')
+const WebpackReactMXWatchPlugin = require('@react-mx/webpack-plugin')
 
 module.exports = {
   webpack: (config, { dev, isServer }) => {
