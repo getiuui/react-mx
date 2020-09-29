@@ -1,6 +1,13 @@
 import { Input as MXInput } from 'react-mx'
-const Button = ({ text = 'Button', width = 100, height = 30, disabled }) => (
-  <button disabled={disabled} style={{ width, height }}>
+const Button = ({
+  text = 'Button',
+  width = 100,
+  height = 30,
+  disabled = true,
+  style = { background: 'white' },
+  onClick = () => {}
+}) => (
+  <button disabled={disabled} style={{ width, height, ...style }}>
     {text}
   </button>
 )
