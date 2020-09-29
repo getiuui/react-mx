@@ -1,11 +1,10 @@
 import React, { FC, Ref, forwardRef } from 'react'
+import { Control, InputControl, SelectControl } from '@react-mx/core'
 import FormItem, { FormItemProps } from 'antd/lib/form/FormItem'
 // import { FormControl, FormLabel, FormControlProps } from '@chakra-ui/core'
 import { toPascalCase, toTextCase } from 'js-convert-case'
-
-import { Control } from './types'
-import { InputControlProps, InputControl } from './Input/types'
-import { SelectControlProps, SelectControl } from './Select/types'
+import { InputControlProps } from './Input'
+import { SelectControlProps } from './Select'
 import Input from './Input'
 // import { Select } from './Select'
 
@@ -65,7 +64,7 @@ const ControlBase: FC<ControlProps> = ({
         <Input
           propKey={propKey}
           placeholder={_placeholder}
-          controlProps={controlProps as InputControlProps}
+          controlProps={controlProps}
           {...props}
           value={value}
           onChange={onValueChange as any}

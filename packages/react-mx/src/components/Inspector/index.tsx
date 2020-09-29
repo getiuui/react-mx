@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Form } from 'antd'
 import { Flex } from '../../ds'
-import { EditableProps } from '../../lib/EditableProps/types'
+import { EditableProps } from '@react-mx/core'
 import Control from '../Control'
 
 interface InspectorProps {

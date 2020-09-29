@@ -1,5 +1,5 @@
-import { SelectType } from './Select/types'
-import { InputType } from './Input/types'
+import { SelectType } from './Select'
+import { InputType } from './Input'
 
 export type ControlBase = {
   key: string
@@ -14,7 +14,7 @@ export type ControlBase = {
   validateParams?: Array<any> | any
   transform?: string | Function
   transformParams?: Array<any> | any
-  controlProps?: object
+  controlProps?: any
 }
 
 export type Control<T> = ControlBase & {

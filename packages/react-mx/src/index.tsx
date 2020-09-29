@@ -2,8 +2,9 @@ import * as React from 'react'
 export { default as Preview } from './components/Preview'
 export { default as ThemeProvider } from './components/ThemeProvider'
 export { default as theme } from './ds/theme'
-export { EditableProps, EditableProp, EditablePropType } from './lib/EditableProps/types'
-export { Select, Input } from './lib/EditableProps'
+
+// @ts-ignore
+export { Select, Input } from '@react-mx/core'
 
 const ReactMX = () => {
   return <div>REACT MX CONTAINER</div>

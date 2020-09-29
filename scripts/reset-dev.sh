@@ -3,4 +3,4 @@
 cd examples/playground
 rm -rf .next
 cd ../../
-npm run init-dev
+npm run link

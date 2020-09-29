@@ -3,7 +3,7 @@ import { theme } from '../../ds'
 // @ts-ignore
 import { Flex, Select, FormControl, FormLabel, Textarea, Box, Checkbox } from '@chakra-ui/core'
 import PanelGroup from 'react-panelgroup'
-import { EditableProps } from '../..'
+import { EditableProps } from '@react-mx/core'
 
 import PreviewHeader from './Header'
 import MXThemeProvider from '../ThemeProvider'

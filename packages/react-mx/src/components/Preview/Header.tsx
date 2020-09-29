@@ -44,7 +44,7 @@ const PreviewHeader: React.FC<PreviewHeaderProps> = ({
         dropdownMatchSelectWidth={false}
         showSearch={true}
       />
-      <Box flex="1">aaa</Box>
+      <Box flex="1" />
       <Space align="center" size={10}>
         <ToggleButton
           icon="AppstoreOutlined"

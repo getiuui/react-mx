@@ -1,5 +1,4 @@
-import { Control } from '../types'
-import { SelectProps } from '@chakra-ui/core'
+import { Control } from './'
 
 export type SelectOptionValueLabel = {
   [value: string]: string
@@ -15,10 +14,7 @@ export type SelectOption = SelectOptionObject | SelectOptionValueLabel | string 
 
 export type SelectType = 'select'
 
-export type SelectControlProps = SelectProps
-
 export type SelectControl = Control<SelectType> & {
   type: SelectType
   options: Array<SelectOption>
-  controlProps?: SelectControlProps
 }

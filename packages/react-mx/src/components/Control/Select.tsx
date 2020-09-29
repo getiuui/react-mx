@@ -1,14 +1,15 @@
 import React, { FC } from 'react'
 
-import { SelectControl, SelectType } from './types'
+import { SelectControl, SelectType } from '@react-mx/core'
 import Select, { SelectProps, SelectValue } from 'antd/lib/select'
 
-type SelectControlProps = Omit<SelectControl, 'key' | 'type'> &
+export type SelectControlProps = Omit<SelectControl, 'key' | 'type' | 'controlProps'> &
   Omit<SelectProps<SelectValue>, 'options' | 'defaultValue'> & {
     propKey?: string
     type?: SelectType
     id?: string
     onChange?: (value: SelectValue) => void
+    controlProps?: SelectProps<SelectValue>
   }
 
 const SelectControlComponent: FC<SelectControlProps> = ({

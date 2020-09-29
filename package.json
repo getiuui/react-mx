@@ -21,12 +21,12 @@
     "lerna": "^3.22.1"
   },
   "scripts": {
+    "link": "lerna link --force-local",
     "reset-dev": "scripts/reset-dev.sh",
-    "init-dev": "scripts/prepare-dev-links.sh",
-    "dev": "npm run reset-dev && concurrently \"npm run start\" \"npm run examples:playground:dev\"",
+    "dev": "lerna run dev",
     "examples:playground:dev": "cd ./examples/playground && npm run dev",
     "lerna": "lerna",
-    "start": "lerna run start --stream --parallel",
+    "start": "lerna run start-watch --stream --parallel",
     "test": "lerna run test --",
     "build": "lerna run build",
     "prepublish": "lerna run prepublish"

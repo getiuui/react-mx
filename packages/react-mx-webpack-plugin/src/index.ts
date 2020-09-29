@@ -3,12 +3,17 @@
  * @extends Object
  * A Webpack plugin that analyses react compionent to determin editable props based on source files.
  */
-import path from 'path'
-// import process from 'process'
-// import { exec, execFileSync } from 'child_process'
-import fs from 'fs'
+import { resolve } from 'path'
+import { readFileSync } from 'fs'
+import { sync as pathExists } from 'path-exists'
 import webpack from 'webpack'
-// import parse from './parser'
+import glob from 'tiny-glob'
+import globrex from 'globrex'
+import globalyzer from 'globalyzer'
+import computeChecksum from './utils/checksum'
+import asyncFilter from './utils/asyncFilter'
+import Cache from './cache'
+import Parser from '@react-mx/parser'
 
 export type MXWebpackConfig = {
   /**
@@ -16,9 +21,9 @@ export type MXWebpackConfig = {
    */
   config?: string
   /**
-   * files to include (default: ['./componments/**'])
+   * files to include (default: ['componments/**'])
    */
-  include?: string | string[]
+  include?: string[]
   /**
    * folder were React MX stores runtime data (default: .react-mx-cache)
    */
@@ -42,16 +47,22 @@ export type MXWebpackConfig = {
    * enable / disable re-analyzinig of components on webpack's hotreaload (default: true)
    */
   watch?: boolean
+
+  /**
+   * disable content change checking; might decrease performace
+   */
+  ignoreChecksum?: boolean
 }
 
 export const defaultConfig: MXWebpackConfig = {
   config: './.reactmxrc',
-  include: ['./components/**/*'],
+  include: ['components/**/*', 'src/components/**/*'],
   cacheDir: '.react-mx-cache',
   editablePropsPersistType: 'folder',
   editablePropsTargetFolder: './editableProps',
   port: 5123,
-  watch: true
+  watch: true,
+  ignoreChecksum: true
 }
 
 export class WebpackReactMXWatchPlugin {
@@ -60,20 +71,25 @@ export class WebpackReactMXWatchPlugin {
       ...defaultConfig,
       ...(cfg || {})
     }
-    this.cwd = null
+
+    this.cache = new Cache()
+    this.parser = new Parser()
   }
 
   private config: MXWebpackConfig
-  private cwd: string | null
+  private cwd: string | undefined
+  private globs: Array<{ include: string; glob: any; expression: any }> = []
+  private cache: Cache
+  private parser: Parser
 
   private readConfig = (compiler: webpack.Compiler) => {
     this.cwd = compiler.context
 
     if (this.config.config) {
-      const cfgFilePath = path.resolve(this.cwd, this.config.config)
+      const cfgFilePath = resolve(this.cwd, this.config.config)
       // there is a config file defined, check if it exists on disk
-      if (fs.existsSync(cfgFilePath)) {
-        const cfgFromFileContent = fs.readFileSync(cfgFilePath, 'utf8')
+      if (pathExists(cfgFilePath)) {
+        const cfgFromFileContent = readFileSync(cfgFilePath, 'utf8')
         let cfgFromFile: MXWebpackConfig | undefined
 
         if (cfgFromFileContent) {
@@ -91,8 +107,31 @@ export class WebpackReactMXWatchPlugin {
           }
         }
       }
+
+      this.cache.setConfig({ folder: this.config.cacheDir, cwd: this.cwd })
+      this.parser.setConfig({ cwd: this.cwd })
     }
+
+    // make sure the icludes have extention filtering added;
+    this.config.include = this.config.include?.map(
+      include => `${include}${include.indexOf('.{') < 0 ? '.{ts,tsx,js,json}' : ''}`
+    )
+
+    // prepare globs for later use
+    this.globs =
+      this.config.include?.map(include => {
+        const glob = globalyzer(`${this.cwd}/${include}`)
+        const expression = glob.isGlob
+          ? globrex(glob.glob, {
+              filepath: true,
+              globstar: true,
+              extended: true
+            })
+          : null
+        return { include, glob, expression }
+      }) || []
   }
+
   public apply(compiler: webpack.Compiler): void {
     this.readConfig(compiler)
 
@@ -112,23 +151,65 @@ export class WebpackReactMXWatchPlugin {
     }
   }
 
-  private readonly onFilesChanged = (files: string[]): void => {
+  private readonly onFilesChanged = async (files: string[]): Promise<void> => {
+    let filesToAnalyse: Array<string> = []
     if (files.length === 0) {
-      console.log('full recompile')
-      // full recompile
-    } else {
-      console.log('files recompile', files)
-      for (const file of files) {
-        console.log(`React MX: changed ${file}`)
-        try {
-          // const componentInfo = parse(file)
-          // console.log('cmp:', componentInfo)
-        } catch (error) {
-          console.error(`React MX failed\n  file: ${file}\n  ${error}`)
-        }
+      // no specific file was sent, so all files that match the patterns need to be analysed
+      if (this.config.include && this.config.include.length) {
+        filesToAnalyse = (
+          await Promise.all(
+            this.config.include.map(async include => {
+              try {
+                if (!include) return []
+
+                return await glob(`${include}`, {
+                  filesOnly: true,
+                  cwd: this.cwd,
+                  absolute: true,
+                  flush: true
+                })
+              } catch (error) {
+                return []
+              }
+            })
+          )
+        ).flat()
       }
-      // just a file
+    } else {
+      // there are specific files send;
+      // this happens when the user changes a file
+      // filter out all files that do not match any patters, or not listed explicitly
+      filesToAnalyse = files.filter(file =>
+        this.globs?.some(({ glob, expression }) => (glob.isGlob ? expression.regex.test(file) : glob.include === file))
+      )
     }
+
+    await this.processChnagedFiles(filesToAnalyse)
+  }
+
+  private processChnagedFiles = async (files: Array<string>): Promise<void> => {
+    // only analyze files who's checksum has changed since last analyze
+    const changedFiles = this.config.ignoreChecksum ? files : await asyncFilter(files, await this.hasFileChanged)
+
+    const results = await this.parser.processFiles(changedFiles)
+    if (results) {
+      Object.keys(results).map(componetAlias => this.cache.saveComponentData(componetAlias, results[componetAlias]))
+    }
+  }
+
+  private hasFileChanged = async (file: string): Promise<boolean> => {
+    const savedChecksum = this.cache.getChecksum(file)
+    const currentChecksum = await this.getFileChecksum(file)
+
+    if (savedChecksum === undefined) return true
+
+    return currentChecksum !== savedChecksum
+  }
+
+  private getFileChecksum = async (file: string): Promise<string> => {
+    const checksum = await computeChecksum(file)
+    this.cache.saveChecksum(file, checksum)
+    return checksum
   }
 }
 
