@@ -45,7 +45,10 @@
     "ora": "^5.1.0",
     "path-exists": "^4.0.0",
     "tiny-glob": "^0.2.6",
-    "@react-mx/parser": "*"
+    "webpack-inject-plugin": "^1.5.4",
+    "@react-mx/client": "*",
+    "@react-mx/parser": "*",
+    "@react-mx/server": "*"
   },
   "publishConfig": {
     "access": "public"

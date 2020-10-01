@@ -12,8 +12,9 @@ import globrex from 'globrex'
 import globalyzer from 'globalyzer'
 import computeChecksum from './utils/checksum'
 import asyncFilter from './utils/asyncFilter'
-import Cache from './cache'
 import Parser from '@react-mx/parser'
+import Server from '@react-mx/server'
+import { MXClientConfig } from '@react-mx/client'
 
 export type MXWebpackConfig = {
   /**
@@ -25,7 +26,7 @@ export type MXWebpackConfig = {
    */
   include?: string[]
   /**
-   * folder were React MX stores runtime data (default: .react-mx-cache)
+   * folder were React MX stores runtime data (default: .mxcache)
    */
   cacheDir: string
   /**
@@ -39,8 +40,14 @@ export type MXWebpackConfig = {
    * folder where generated editable props info will be stored if 'editablePropsPersistType' = folder (default: './editableProps)
    */
   editablePropsTargetFolder?: string
+
   /**
-   * to on which the ReactMX server will run
+   * host where the server will be reachable (default: http://localhost)
+   */
+  host?: string | null | undefined
+
+  /**
+   * port on which the ReactMX server will run (default: 5555)
    */
   port?: string | number
   /**
@@ -57,10 +64,11 @@ export type MXWebpackConfig = {
 export const defaultConfig: MXWebpackConfig = {
   config: './.reactmxrc',
   include: ['components/**/*', 'src/components/**/*'],
-  cacheDir: '.react-mx-cache',
+  cacheDir: '.mxcache',
   editablePropsPersistType: 'folder',
   editablePropsTargetFolder: './editableProps',
-  port: 5123,
+  host: 'http://localhost',
+  port: 5555,
   watch: true,
   ignoreChecksum: true
 }
@@ -72,15 +80,15 @@ export class WebpackReactMXWatchPlugin {
       ...(cfg || {})
     }
 
-    this.cache = new Cache()
     this.parser = new Parser()
+    this.server = new Server()
   }
 
   private config: MXWebpackConfig
   private cwd: string | undefined
   private globs: Array<{ include: string; glob: any; expression: any }> = []
-  private cache: Cache
   private parser: Parser
+  private server: Server
 
   private readConfig = (compiler: webpack.Compiler) => {
     this.cwd = compiler.context
@@ -108,8 +116,12 @@ export class WebpackReactMXWatchPlugin {
         }
       }
 
-      this.cache.setConfig({ folder: this.config.cacheDir, cwd: this.cwd })
       this.parser.setConfig({ cwd: this.cwd })
+      this.server.setConfig({
+        port: this.config.port,
+        cacheDir: this.config.cacheDir,
+        cwd: this.cwd
+      })
     }
 
     // make sure the icludes have extention filtering added;
@@ -132,8 +144,33 @@ export class WebpackReactMXWatchPlugin {
       }) || []
   }
 
+  private getClientConfig(): MXClientConfig {
+    return {
+      port: this.config.port,
+      host: this.config.host
+    }
+  }
+
+  private injectPlugins(compiler: webpack.Compiler): void {
+    const ignoreCacheExpression = new RegExp(this.config.cacheDir)
+
+    const plugins = [
+      new webpack.IgnorePlugin(ignoreCacheExpression),
+      // @TODO: this does not work!!!
+      new webpack.DefinePlugin({ REACT_MX_CLIENT_CONFIG: JSON.stringify(this.getClientConfig()) })
+    ]
+
+    plugins.forEach(plugin => {
+      plugin.apply(compiler)
+    })
+  }
+
   public apply(compiler: webpack.Compiler): void {
     this.readConfig(compiler)
+
+    this.injectPlugins(compiler)
+
+    this.server.start()
 
     // if recompilation is disabled
     if (!this.config.watch) return
@@ -193,12 +230,14 @@ export class WebpackReactMXWatchPlugin {
 
     const results = await this.parser.processFiles(changedFiles)
     if (results) {
-      Object.keys(results).map(componetAlias => this.cache.saveComponentData(componetAlias, results[componetAlias]))
+      Object.keys(results).map(componetAlias =>
+        this.server.cache.saveComponentData(componetAlias, results[componetAlias])
+      )
     }
   }
 
   private hasFileChanged = async (file: string): Promise<boolean> => {
-    const savedChecksum = this.cache.getChecksum(file)
+    const savedChecksum = this.server.cache.getChecksum(file)
     const currentChecksum = await this.getFileChecksum(file)
 
     if (savedChecksum === undefined) return true
@@ -208,7 +247,7 @@ export class WebpackReactMXWatchPlugin {
 
   private getFileChecksum = async (file: string): Promise<string> => {
     const checksum = await computeChecksum(file)
-    this.cache.saveChecksum(file, checksum)
+    this.server.cache.saveChecksum(file, checksum)
     return checksum
   }
 }
