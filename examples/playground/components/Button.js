@@ -12,23 +12,23 @@ const Button = ({
   </button>
 )
 
-Button.editableProps = {
-  text: MXInput({
-    default: 'Button',
-    valueType: String,
-    isVisibleByDefault: true
-  }),
-  width: MXInput({
-    valueType: Number,
-    default: 100
-  }),
-  height: MXInput({
-    valueType: Number,
-    default: 30,
-    controlProps: {
-      type: 'number'
-    }
-  })
-}
+// Button.editableProps = {
+//   text: MXInput({
+//     default: 'Button',
+//     valueType: String,
+//     isVisibleByDefault: true
+//   }),
+//   width: MXInput({
+//     valueType: Number,
+//     default: 100
+//   }),
+//   height: MXInput({
+//     valueType: Number,
+//     default: 30,
+//     controlProps: {
+//       type: 'number'
+//     }
+//   })
+// }
 
 export default Button
