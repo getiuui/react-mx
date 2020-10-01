@@ -11,27 +11,29 @@ interface InspectorProps {
 }
 
 // @ts-ignore
-const Inspector: FC<InspectorProps> = ({ editableProps, props, onUpdateProp = () => {} }) => (
-  <Flex direction="column" height="full" vertical width="full" padding="small" backgroundColor="lightBackgroundGray">
-    <Form layout="horizontal">
-      {editableProps
-        ? Object.keys(editableProps).map(editablePropKey => {
-            const { key, ...editableProp } = editableProps[editablePropKey]
-            const propKey = key || editablePropKey
-            return (
-              <Control
-                propKey={propKey}
-                {...editableProp}
-                value={props ? props[propKey] : null}
-                onChange={(value: any) => {
-                  onUpdateProp(key || editablePropKey, value)
-                }}
-              />
-            )
-          })
-        : null}
-    </Form>
-  </Flex>
-)
+const Inspector: FC<InspectorProps> = ({ editableProps, props, onUpdateProp = () => {} }) => {
+  return (
+    <Flex direction="column" height="full" vertical width="full" padding="small" backgroundColor="lightBackgroundGray">
+      <Form layout="horizontal">
+        {editableProps
+          ? Object.keys(editableProps).map(editablePropKey => {
+              const { key, ...editableProp } = editableProps[editablePropKey]
+              const propKey = key || editablePropKey
+              return (
+                <Control
+                  propKey={propKey}
+                  {...editableProp}
+                  value={props ? props[propKey] : null}
+                  onChange={(value: any) => {
+                    onUpdateProp(key || editablePropKey, value)
+                  }}
+                />
+              )
+            })
+          : null}
+      </Form>
+    </Flex>
+  )
+}
 
 export default Inspector

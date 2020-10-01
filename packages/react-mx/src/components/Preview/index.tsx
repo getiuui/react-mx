@@ -4,6 +4,7 @@ import { theme } from '../../ds'
 import { Flex, Select, FormControl, FormLabel, Textarea, Box, Checkbox } from '@chakra-ui/core'
 import PanelGroup from 'react-panelgroup'
 import { EditableProps } from '@react-mx/core'
+import { useReactMXClient, MXClientConfig } from '@react-mx/client'
 
 import PreviewHeader from './Header'
 import MXThemeProvider from '../ThemeProvider'
@@ -13,6 +14,7 @@ import Inspector from '../Inspector'
 import Stage from '../Stage'
 
 import '../../ds/theme/ant.less'
+import useComponents from '../../hooks/useComponents'
 
 export interface PreviewProps {
   components?: {
@@ -21,17 +23,31 @@ export interface PreviewProps {
   editableProps?: {
     [componentName: string]: EditableProps
   }
+  config?: MXClientConfig
   component?: string | null | undefined
   showHeader?: boolean
 }
 
-// @ts-ignore
-const Preview: React.FC<PreviewProps> = ({ components, editableProps, component, showHeader = true }) => {
+const Preview: React.FC<PreviewProps> = ({
+  components,
+  editableProps,
+  component,
+  showHeader = true,
+  config = { host: 'http://localhost', port: 5555 }
+}) => {
+  const { setConfig } = useReactMXClient()
+  const { components: data, loading, error } = useComponents()
+  console.log('components data', { data, loading, error })
+
   const [currentComponentType, setCurrentComponentType] = useState<string | null | undefined>(component || null)
 
   const [showOutline, setShowOutline] = useState<boolean>(false)
   const [showCheckerboard, setShowCheckerboard] = useState<boolean>(false)
   const [props, setProps] = useState<object>({})
+
+  useEffect(() => {
+    setConfig(config)
+  }, [config])
 
   const changeType = type => {
     setCurrentComponentType(type)
