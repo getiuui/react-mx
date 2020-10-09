@@ -60,7 +60,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
   }
 
   public connect(): void {
-    console.log('connecting')
     this.socket.on('connect', () => {
       this.connected = true
       this.emit('connect')
@@ -83,7 +82,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
   public async isConnected() {
     return new Promise(resolve => {
-      console.log('this.connected', this.connected)
       if (this.connected) return resolve()
 
       this.once('connect', () => {

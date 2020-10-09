@@ -4,7 +4,7 @@ import { readFileSync, statSync } from 'fs'
 import { sync as pathExists } from 'path-exists'
 import reactTsDocgen from 'react-docgen-typescript'
 import reactJsDocgen from 'react-docgen'
-import { EditableProp, EditableProps, EditablePropType } from '@react-mx/core'
+import { EditableProp, EditableProps, EditablePropType, Component } from '@react-mx/core'
 import ora from 'ora'
 
 const typeToControlMap = {
@@ -26,14 +26,7 @@ type ComponentFiles = {
   editablePropsFile?: string | null | undefined
 }
 
-type ComponentData = {
-  name: string
-  definitinFile: string
-  editablePropsFile?: string | null | undefined
-  editableProps: EditableProps
-}
-
-type ProcessResults = { [componentKey: string]: ComponentData } | null | undefined
+type ProcessResults = { [componentKey: string]: Component } | null | undefined
 
 const defaultConfig: MXParserConfig = {
   cwd: ''
@@ -202,9 +195,8 @@ export default class Parser {
     // this is to avoid processing twice the component files when all files are re-processed
     // also when definition file changes, the editableProps has to be checked too, and vice-versa
     const results: ProcessResults = {}
-    const filesByComponent: { [componentName: string]: ComponentFiles } = {}
+    const filesByComponent: { [componentAlias: string]: ComponentFiles } = {}
 
-    // console.log(`⚛️ ReactMX: ${files.length} files to process`)
     if (files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
@@ -232,7 +224,8 @@ export default class Parser {
             const editablePropsData = component.editablePropsFile
               ? await this.processEditablePropsFile(component.editablePropsFile)
               : null
-            const componentData: ComponentData = {
+            const componentData: Component = {
+              key: componentAlias,
               name: definitionData ? definitionData.displayName : component.displayAlias,
               definitinFile: component.definitionFile
                 ? component.definitionFile?.replace(`${this.config.cwd}/`, '')

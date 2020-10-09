@@ -4,7 +4,7 @@ import { Tooltip } from 'antd'
 import * as icons from '@ant-design/icons'
 import theme from '../theme'
 
-const ToggleButton = ({ icon, tooltip, checked, onChange, style }) => {
+const ToggleButton = ({ dark, icon, tooltip, checked, onChange, style }) => {
   const Icon = icons[icon]
 
   if (!Icon) return null
@@ -12,10 +12,10 @@ const ToggleButton = ({ icon, tooltip, checked, onChange, style }) => {
   const renderedIcon = (
     <Icon
       style={{
-        color: checked ? theme.colors.primary : theme.colors.darkGray,
+        color: checked ? theme.colors.primary : dark ? theme.colors.white : theme.colors.darkGray,
         padding: 5,
         borderRadius: theme.radii.sm,
-        backgroundColor: theme.colors.lightGray,
+        backgroundColor: dark ? theme.colors.darker : theme.colors.lightGray,
         ...(style || {})
       }}
       onClick={() => onChange(!checked)}

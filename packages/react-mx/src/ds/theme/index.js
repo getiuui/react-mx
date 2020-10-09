@@ -46,7 +46,7 @@ export const letterSpacings = {
 
 export const brand = '#1774ff'
 export const dark = '#6b6b6b'
-export const darker = '#16161D'
+export const darker = '#2d2d2d'
 export const yellow = '#ffc417'
 export const orange = '#f79138'
 export const white = '#fff'

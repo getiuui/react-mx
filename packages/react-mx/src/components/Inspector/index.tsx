@@ -13,7 +13,7 @@ interface InspectorProps {
 // @ts-ignore
 const Inspector: FC<InspectorProps> = ({ editableProps, props, onUpdateProp = () => {} }) => {
   return (
-    <Flex direction="column" height="full" vertical width="full" padding="small" backgroundColor="lightBackgroundGray">
+    <Flex horizontal height="full" vertical width="full" padding="small" backgroundColor="lightBackgroundGray">
       <Form layout="horizontal">
         {editableProps
           ? Object.keys(editableProps).map(editablePropKey => {

@@ -4,6 +4,7 @@ import { sync as pathExists } from 'path-exists'
 import low, { LowdbSync } from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 import glob from 'tiny-glob'
+import { Component } from '@react-mx/core'
 
 export type MXCacheConfig = {
   cwd: string | undefined | null
@@ -78,18 +79,18 @@ export default class Cache {
     return this.fileHashDb.set(`entries.${entryKey}`, checksum).write()
   }
 
-  public saveComponentData(file: string, data: any): void {
+  public saveComponentData(file: string, data: Component): void {
     const path = `${this.getEntryPathForFile(file)}.json`
     writeFileSync(path, JSON.stringify(data, null, 2))
   }
 
-  public getComponentData(key: string): any {
+  public getComponentData(key: string): Component {
     const path = `${this.getEntryPathForFile(key)}.json`
     if (!this.entryExists(path)) throw new Error(`Invalid file: ${key}`)
     return require(path)
   }
 
-  public async getAllComponents(): Promise<Array<any>> {
+  public async getAllComponents(): Promise<Array<Component>> {
     const files = await glob(`*.json`, {
       dot: false,
       filesOnly: true,
@@ -103,10 +104,7 @@ export default class Cache {
         const fileName = basename(file)
         if (fileName === 'checksums.json') return null
 
-        return {
-          key: fileName.replace('.json', '').replace(/____/g, '/'),
-          ...require(file)
-        }
+        return require(file)
       })
       .filter(cmp => cmp)
   }

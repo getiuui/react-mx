@@ -2,4 +2,6 @@ export { SelectControl, SelectOption, SelectOptionObject, SelectOptionValueLabel
 export { InputControl, InputType } from './Control/Input'
 export { Control, ControlBase } from './Control'
 export { EditableProps, EditableProp, EditablePropType } from './EditableProps'
+export { Component } from './Component'
 export { Input, Select } from './helpers'
+export { loader, ComponentLoader } from './loader'

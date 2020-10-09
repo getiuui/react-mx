@@ -1,10 +1,12 @@
-import Button from '../components/Button'
-import Card, { editableProps as CardEditableProps } from '../components/Card'
+import { Preview, loader } from 'react-mx'
 
-import { Preview } from 'react-mx'
+const componentLoader = loader({
+  components: file => import(`../components/${file}`),
+  pages: file => import(`./${file}`)
+})
 
-const Index = () => (
-  <Preview components={{ Button, Card }} component="Card" editableProps={{ Card: CardEditableProps }} />
-)
+const Index = () => {
+  return <Preview componentLoader={componentLoader} />
+}
 
 export default Index
