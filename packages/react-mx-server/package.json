@@ -30,13 +30,16 @@
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.8",
     "@types/socket.io": "^2.1.11",
+    "@types/lowdb": "1.0.1",
     "tsdx": "^0.13.3"
   },
   "dependencies": {
     "@react-mx/core": "*",
+    "@react-mx/parser": "*",
     "chokidar": "^3.4.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "lowdb": "^1.0.0",
     "path-exists": "^4.0.0",
     "tiny-glob": "^0.2.6",
     "socket.io": "^2.3.0",

@@ -1,4 +1,4 @@
-import { statSync, writeFileSync, mkdirSync } from 'fs'
+import { statSync, writeFileSync, readFileSync, mkdirSync } from 'fs'
 import { basename } from 'path'
 import { sync as pathExists } from 'path-exists'
 import low, { LowdbSync } from 'lowdb'
@@ -7,21 +7,27 @@ import glob from 'tiny-glob'
 import { Component } from '@react-mx/core'
 
 export type MXCacheConfig = {
+  /**
+   * current working dorectory
+   */
   cwd: string | undefined | null
+  /**
+   * folder were React MX stores runtime data (default: .mxcache)
+   */
   cacheDir: string | undefined | null
 }
 
-const defaultConfig: MXCacheConfig = {
+export const defaultCacheConfig: MXCacheConfig = {
   cwd: '',
-  cacheDir: ''
+  cacheDir: '.mxcache'
 }
 
 export default class Cache {
   constructor(cfg?: MXCacheConfig) {
-    this.setConfig(cfg || defaultConfig)
+    this.setConfig(cfg || defaultCacheConfig)
   }
 
-  private config: MXCacheConfig = defaultConfig
+  private config: MXCacheConfig = defaultCacheConfig
   private path: string = ''
 
   // @ts-ignore
@@ -29,16 +35,11 @@ export default class Cache {
 
   public setConfig(config: MXCacheConfig) {
     this.config = {
-      ...defaultConfig,
+      ...defaultCacheConfig,
       ...(config || {})
     }
 
-    if (this.config.cwd !== '' && this.config.cacheDir !== '') {
-      this.path = `${this.config.cwd}/${this.config.cacheDir}`
-
-      this.createCacheFolderIfNotExists()
-      this.initHashDb()
-    }
+    this.path = `${this.config.cwd}/${this.config.cacheDir}`
   }
 
   private createCacheFolderIfNotExists(): void {
@@ -47,6 +48,18 @@ export default class Cache {
     if (!pathExists(this.path) || !statSync(this.path as string).isDirectory()) {
       mkdirSync(this.path as string)
     }
+  }
+
+  public init() {
+    if (this.config.cwd === '' || this.config.cacheDir === '')
+      throw new Error(
+        `Invalid cache config: ${JSON.stringify({ cwd: this.config.cwd, cacheDir: this.config.cacheDir })}`
+      )
+
+    this.path = `${this.config.cwd}/${this.config.cacheDir}`
+
+    this.createCacheFolderIfNotExists()
+    this.initHashDb()
   }
 
   private initHashDb() {
@@ -71,6 +84,7 @@ export default class Cache {
 
   public getChecksum(file: string): string | null | undefined {
     const entryKey = this.pathToEntryKey(file)
+    //@ts-ignore
     return this.fileHashDb.get(`entries.${entryKey}`).value() as string | null | undefined
   }
 
@@ -79,9 +93,9 @@ export default class Cache {
     return this.fileHashDb.set(`entries.${entryKey}`, checksum).write()
   }
 
-  public saveComponentData(file: string, data: Component): void {
-    const path = `${this.getEntryPathForFile(file)}.json`
-    writeFileSync(path, JSON.stringify(data, null, 2))
+  public saveComponentData(component: Component): void {
+    const path = `${this.getEntryPathForFile(component.key)}.json`
+    writeFileSync(path, JSON.stringify(component, null, 2))
   }
 
   public getComponentData(key: string): Component {
@@ -104,7 +118,9 @@ export default class Cache {
         const fileName = basename(file)
         if (fileName === 'checksums.json') return null
 
-        return require(file)
+        // return require(file)
+        const content = readFileSync(file, 'utf-8')
+        return JSON.parse(content)
       })
       .filter(cmp => cmp)
   }

@@ -2,32 +2,35 @@ import express from 'express'
 import cors from 'cors'
 import * as http from 'http'
 import * as socketIO from 'socket.io'
-import Cache from './cache'
-import Watcher from './watcher'
+import Cache, { MXCacheConfig, defaultCacheConfig } from './cache'
+import CodeAnalyzer, { defaultAnalyzerConfig, MXCodeAnalyzerConfig } from './analyzer'
 import Handler from './handler'
+import { Component } from '@react-mx/core'
 
-export type MXServerConfig = {
-  port: string | number | undefined
-  cwd: string
-  cacheDir: string | undefined | null
-}
+export type MXServerConfig = MXCodeAnalyzerConfig &
+  MXCacheConfig & {
+    /**
+     * port on which the ReactMX server will run (default: 5555)
+     */
+    port?: string | number
+  }
 
-const defaultConfig: MXServerConfig = {
-  cwd: '',
-  cacheDir: '.mxcache',
+export const defaultServerConfig: MXServerConfig = {
+  ...defaultCacheConfig,
+  ...defaultAnalyzerConfig,
   port: 5555
 }
 
 export default class Server {
   constructor(cfg?) {
-    this.setConfig(cfg || defaultConfig)
+    this.setConfig(cfg || defaultServerConfig)
   }
 
-  private config: MXServerConfig = defaultConfig
+  private config: MXServerConfig = defaultServerConfig
 
   public cache: Cache = new Cache()
 
-  private watcher: Watcher = new Watcher()
+  private analyzer: CodeAnalyzer = new CodeAnalyzer(this.cache, defaultServerConfig)
 
   public isRunning: boolean = false
   //@ts-ignore
@@ -41,11 +44,12 @@ export default class Server {
 
   public setConfig(config: MXServerConfig) {
     this.config = {
-      ...defaultConfig,
+      ...defaultServerConfig,
       ...(config || {})
     }
 
-    this.cache.setConfig({ cacheDir: this.config.cacheDir, cwd: this.config.cwd })
+    this.cache.setConfig(this.config)
+    this.analyzer.setConfig(this.config)
 
     this.createApp()
     this.createServer()
@@ -75,6 +79,10 @@ export default class Server {
 
       socket.on('request', this.handler.handle.bind(this.handler))
 
+      this.analyzer.on('component', (component: Component) => {
+        socket.emit('component', component)
+      })
+
       socket.on('disconnect', () => {
         console.log('Client disconnected')
       })
@@ -82,7 +90,8 @@ export default class Server {
   }
 
   public start() {
-    this.watcher.start()
+    this.cache.init()
+    this.analyzer.start()
     this.listen()
     this.isRunning = true
   }

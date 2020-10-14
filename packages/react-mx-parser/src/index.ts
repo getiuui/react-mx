@@ -16,7 +16,7 @@ const typeToControlMap = {
 }
 
 type MXParserConfig = {
-  cwd: string
+  cwd: string | undefined | null
 }
 
 type ComponentFiles = {
@@ -25,8 +25,6 @@ type ComponentFiles = {
   definitionFile: string | null | undefined
   editablePropsFile?: string | null | undefined
 }
-
-type ProcessResults = { [componentKey: string]: Component } | null | undefined
 
 const defaultConfig: MXParserConfig = {
   cwd: ''
@@ -46,7 +44,7 @@ export default class Parser {
     }
   }
 
-  private convertDocgenPropsToEditableProps = (props: object): EditableProps => {
+  private convertDocgenPropsToEditableProps(props: object): EditableProps {
     const propKeys = Object.keys(props)
     if (!propKeys || propKeys.length === 0) return {}
 
@@ -68,7 +66,8 @@ export default class Parser {
         }
       }
 
-      let valueType: EditablePropType = defaultValue ? typeof defaultValue : typeof ''
+      let valueType: EditablePropType = defaultValue !== undefined ? typeof defaultValue : typeof ''
+
       if (valueType === 'function') {
         defaultValue = rawProp.defaultValue.value
       }
@@ -90,36 +89,43 @@ export default class Parser {
     return editableProps
   }
 
-  private processEditablePropsFile = (file: string) => {
+  private processEditablePropsFile(file: string) {
     // hanlde change of editable props file of a component
-    const content = require(file)
+    try {
+      const content = readFileSync(`${this.config.cwd}/${file}`, 'utf-8')
+      const editableProps = JSON.parse(content)
+
+      return {
+        editableProps
+      }
+    } catch (error) {
+      console.error(`Failed processiong ${file}`, error)
+      return undefined
+    }
     //try to determine the name of the component
     //check is there's a missmatchbetween props (new props in file or deleted)
-    return {
-      editableProps: content
-    }
   }
 
-  private processJavascriptFile = (file: string): any => {
-    const jsContent = readFileSync(file)
+  private processJavascriptFile(file: string): any {
+    const jsContent = readFileSync(`${this.config.cwd}/${file}`)
     const { displayName, props } = reactJsDocgen.parse(jsContent) as any
 
     const editableProps = this.convertDocgenPropsToEditableProps(props)
     return { displayName, editableProps }
   }
 
-  private processTypescriptFile = (file: string): any => {
+  private processTypescriptFile(file: string): any {
     const options = {
       savePropValueAsString: true
     }
 
-    const { displayName, props } = reactTsDocgen.parse(file, options) as any
+    const { displayName, props } = reactTsDocgen.parse(`${this.config.cwd}/${file}`, options) as any
     const editableProps = this.convertDocgenPropsToEditableProps(props)
     return { displayName, editableProps }
   }
 
   // @ts-ignore
-  public processDefinitionFile = (file: string, tsconfigPath?: string) => {
+  public processDefinitionFile(file: string, tsconfigPath?: string) {
     const ext = extname(file)
 
     if (!pathExists(file)) throw new Error(`React MX analiser: ${file} does not exist`)
@@ -134,7 +140,7 @@ export default class Parser {
     }
   }
 
-  private resolveComponentFiles = (file: string): ComponentFiles => {
+  private resolveComponentFiles(file: string): ComponentFiles {
     const componentFiles: ComponentFiles = {
       displayAlias: null,
       componentName: null,
@@ -178,6 +184,7 @@ export default class Parser {
       }
 
       componentFiles.componentName = basename(folderName)
+      componentFiles.definitionFile = file
     } else {
       // this is a plain js / ts file, so no editableProps will be present
       componentFiles.displayAlias = `${folderName
@@ -190,91 +197,57 @@ export default class Parser {
     return componentFiles
   }
 
-  public processFiles = async (files: Array<string>): Promise<ProcessResults> => {
-    // prepare files by grouping them by their componentDefinition
-    // this is to avoid processing twice the component files when all files are re-processed
-    // also when definition file changes, the editableProps has to be checked too, and vice-versa
-    const results: ProcessResults = {}
-    const filesByComponent: { [componentAlias: string]: ComponentFiles } = {}
+  public async processFile(file: string): Promise<Component | undefined> {
+    const spinner = ora(`⚛️ ReactMX: ${file}`).start()
+    try {
+      const componentFiles: ComponentFiles = await this.resolveComponentFiles(file)
 
-    if (files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
-        const componentFiles: ComponentFiles = await this.resolveComponentFiles(file)
-        if (componentFiles.displayAlias) {
-          if (!filesByComponent[componentFiles.displayAlias as string]) {
-            filesByComponent[componentFiles.displayAlias as string] = componentFiles
-          }
-        }
+      const definitionData = componentFiles.definitionFile
+        ? await this.processDefinitionFile(componentFiles.definitionFile)
+        : null // @todo: add tscofig info
+      const editablePropsData = componentFiles.editablePropsFile
+        ? await this.processEditablePropsFile(componentFiles.editablePropsFile)
+        : null
+      const component: Component = {
+        key: componentFiles.displayAlias as string,
+        name: definitionData ? definitionData.displayName : componentFiles.displayAlias,
+        definitinFile: componentFiles.definitionFile
+          ? componentFiles.definitionFile?.replace(`${this.config.cwd}/`, '')
+          : '',
+        editablePropsFile: componentFiles.editablePropsFile?.replace(`${this.config.cwd}/`, ''),
+        editableProps: {}
       }
 
-      const componentAliases = Object.keys(filesByComponent)
-
-      const spinner = ora(`⚛️ ReactMX: ${files.length} files changed.`).start()
-
-      if (componentAliases.length > 0) {
-        for (let i = 0; i < componentAliases.length; i++) {
-          const componentAlias = componentAliases[i]
-          const component = filesByComponent[componentAlias]
-          spinner.text = `⚛️ ReactMX ( ${i + 1} / ${componentAliases.length} ): ${component.componentName}`
-          try {
-            const definitionData = component.definitionFile
-              ? await this.processDefinitionFile(component.definitionFile)
-              : null // @todo: add tscofig info
-            const editablePropsData = component.editablePropsFile
-              ? await this.processEditablePropsFile(component.editablePropsFile)
-              : null
-            const componentData: Component = {
-              key: componentAlias,
-              name: definitionData ? definitionData.displayName : component.displayAlias,
-              definitinFile: component.definitionFile
-                ? component.definitionFile?.replace(`${this.config.cwd}/`, '')
-                : '',
-              editablePropsFile: component.editablePropsFile?.replace(`${this.config.cwd}/`, ''),
-              editableProps: {}
-            }
-
-            // apply the data extracted from source
-            if (definitionData && definitionData.editableProps) {
-              Object.keys(definitionData.editableProps).map(propKey => {
-                componentData.editableProps[propKey] = {
-                  ...definitionData.editableProps[propKey],
-                  explicit: false
-                }
-              })
-            }
-
-            // apply the data extracted from editableProps file
-            // if props already exists, override, and mark is explicit
-            if (editablePropsData && editablePropsData.editableProps) {
-              Object.keys(editablePropsData.editableProps).map(propKey => {
-                // if the prop was already read form source, replace it's definition, but keep the sourceProps info
-                // this is to allow later updating of props from ui; EX: user has changed the props but has to update their editable props info
-                componentData.editableProps[propKey] = {
-                  propDataFromSource: componentData.editableProps[propKey] || null,
-                  ...editablePropsData.editableProps[propKey],
-                  explicit: true
-                }
-              })
-            }
-            results[componentAlias] = componentData
-          } catch (error) {
-            spinner.fail(`⚛️ ReactMX: ${componentAlias} failed to process:`)
-            console.error(error)
-            return null
+      // apply the data extracted from source
+      if (definitionData && definitionData.editableProps) {
+        Object.keys(definitionData.editableProps).map(propKey => {
+          component.editableProps[propKey] = {
+            ...definitionData.editableProps[propKey],
+            explicit: false
           }
-        }
-        spinner.succeed(
-          `⚛️ ReactMX: ${componentAliases.length} components analysed: [ ${componentAliases.join(', ')} ]`
-        )
-      } else {
-        spinner.succeed(`⚛️ ReactMX: no components found in changed files`)
+        })
       }
 
-      return results
-    } else {
-      console.log(`⚛️ ReactMX: ✔ no files were modified`)
-      return null
+      // apply the data extracted from editableProps file
+      // if props already exists, override, and mark is explicit
+      if (editablePropsData && editablePropsData.editableProps) {
+        Object.keys(editablePropsData.editableProps).map(propKey => {
+          // if the prop was already read form source, replace it's definition, but keep the sourceProps info
+          // this is to allow later updating of props from ui; EX: user has changed the props but has to update their editable props info
+          component.editableProps[propKey] = {
+            propDataFromSource: component.editableProps[propKey] || null,
+            ...editablePropsData.editableProps[propKey],
+            explicit: true
+          }
+        })
+      }
+      spinner.succeed(`⚛️ ReactMX: ${file} analysed`)
+      return component
+    } catch (error) {
+      spinner.fail(`⚛️ ReactMX: ${file} failed to process:`)
+      console.error(error)
     }
+
+    return undefined
   }
 }
