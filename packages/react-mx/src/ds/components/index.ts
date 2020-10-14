@@ -1,5 +1,4 @@
 export { default as Container } from './Container'
-export { default as Stack } from './Stack'
 export { default as Flex } from './Flex'
 export { default as H1 } from './H1'
 export { default as H2 } from './H2'

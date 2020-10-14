@@ -1,5 +1,5 @@
 import React from 'react'
-import Stack from './Stack'
+import { Stack } from '@chakra-ui/core'
 
 const Header = ({ dark = true, light = false, children, ...props }) => (
   <Stack
@@ -8,7 +8,7 @@ const Header = ({ dark = true, light = false, children, ...props }) => (
     justifyContent="center"
     width="full"
     height="40px"
-    backgroundColor={(dark === true || dark===undefined) && light === false ? "black" : "white"}
+    backgroundColor={(dark === true || dark === undefined) && light === false ? 'black' : 'white'}
     paddingX="small"
     paddingY="xs"
     {...props}

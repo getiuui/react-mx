@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import React, { useEffect, ComponentType, useCallback } from 'react'
-import { theme, Header } from '../ds'
+import { theme } from '../ds'
 import { Flex, Select, FormControl, FormLabel, Textarea, Box, Checkbox } from '@chakra-ui/core'
 import PanelGroup from 'react-panelgroup'
 import { EditableProps } from '@react-mx/core'
@@ -11,6 +11,7 @@ import MXThemeProvider from './ThemeProvider'
 
 import Inspector from './Inspector'
 import Stage from './Stage'
+import MainHeader from './Header'
 
 import '../ds/theme/ant.less'
 import useSelectedComponent from '../hooks/preview/useSelectedComponent'
@@ -74,38 +75,35 @@ const Preview: React.FC<PreviewProps> = ({
 
   return (
     <MXThemeProvider theme={theme}>
-      <>
-        <Header>test</Header>
-        <PanelGroup
-          direction="row"
-          borderColor={theme.colors.lightBorder}
-          panelWidths={[
-            { size: leftPanelVisible ? leftPanelSize : 0, minSize: leftPanelVisible ? 200 : 0, resize: 'dynamic' },
-            { minSize: 300, resize: 'stretch' },
-            { size: rightPanelVisible ? rightPanelSize : 0, minSize: rightPanelVisible ? 200 : 0, resize: 'dynamic' }
-          ]}
-          onUpdate={data => {
-            updatePanelSizes(data, setLeftPanelTempSize, setRightPanelTempSize)
-          }}
-          onResizeStart={() => {
-            setIsResizing(true)
-          }}
-          onResizeEnd={data => {
-            updatePanelSizes(data, setLeftPanelSize, setRightPanelSize)
-            setIsResizing(false)
-          }}
-        >
-          <Selector />
-          <Stage showHeader={showHeader}>
-            {Component ? (
-              <React.Suspense fallback="">
-                <Component {...(props || {})} />
-              </React.Suspense>
-            ) : null}
-          </Stage>
-          <Inspector />
-        </PanelGroup>
-      </>
+      <PanelGroup
+        direction="row"
+        borderColor={theme.colors.lightBorder}
+        panelWidths={[
+          { size: leftPanelVisible ? leftPanelSize : 0, minSize: leftPanelVisible ? 200 : 0, resize: 'dynamic' },
+          { minSize: 300, resize: 'stretch' },
+          { size: rightPanelVisible ? rightPanelSize : 0, minSize: rightPanelVisible ? 200 : 0, resize: 'dynamic' }
+        ]}
+        onUpdate={data => {
+          updatePanelSizes(data, setLeftPanelTempSize, setRightPanelTempSize)
+        }}
+        onResizeStart={() => {
+          setIsResizing(true)
+        }}
+        onResizeEnd={data => {
+          updatePanelSizes(data, setLeftPanelSize, setRightPanelSize)
+          setIsResizing(false)
+        }}
+      >
+        <Selector />
+        <Stage showHeader={showHeader}>
+          {Component ? (
+            <React.Suspense fallback="">
+              <Component {...(props || {})} />
+            </React.Suspense>
+          ) : null}
+        </Stage>
+        <Inspector />
+      </PanelGroup>
     </MXThemeProvider>
   )
 }

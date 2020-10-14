@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
-import { Stack, ToggleButton } from '../../ds'
+import { Header, ToggleButton } from '../../ds'
+import { Stack } from '@chakra-ui/core'
 import { Space } from 'antd'
 import useCheckerboard from '../../hooks/preview/useCheckerboard'
 import useOutline from '../../hooks/preview/useOutline'
@@ -13,17 +14,7 @@ const PreviewHeader: FC = () => {
   const { visible: codeVisible, toggle: toggleCode } = useCodePreview()
 
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="center"
-      width="full"
-      height="10"
-      borderBottom={'1px'}
-      borderBottomColor="#e5e5e5"
-      backgroundColor="white"
-      padding="small"
-    >
+    <Header light={true} borderBottom="1px" borderBottomColor="lighterBorder">
       <Space align="center" size={10}>
         <ToggleButton
           icon="RiLayoutLeft2Line"
@@ -57,7 +48,7 @@ const PreviewHeader: FC = () => {
           onChange={toggleRightPanel}
         />
       </Space>
-    </Stack>
+    </Header>
   )
 }
 
