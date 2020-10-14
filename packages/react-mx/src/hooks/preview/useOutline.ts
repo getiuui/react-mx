@@ -2,7 +2,7 @@ import Preview from '../../store/preview'
 import useSubscription from '../common/useSubscription'
 
 export const useOutline = (): {
-  enabled: boolean | undefined
+  enabled: boolean
   show: () => void
   hide: () => void
   toggle: () => void

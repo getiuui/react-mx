@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"prettier.configPath": "./.prettierrc",
+		"prettier.prettierPath": "./node_modules/prettier"
+	}
+}

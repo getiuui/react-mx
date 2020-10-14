@@ -58,6 +58,9 @@ export const lightBackgroundGray = '#fbfbfb'
 export const darkGray = '#A6ADAF'
 export const border = '#E3E5E6'
 export const lightBorder = 'rgba(0, 0, 0, 0.05)'
+export const lighterBorder = '#f5f2f2'
+export const lightText = '#b3b3b3'
+export const mediumText = '#8e8d8d'
 
 export const brandColors = {
   brand,
@@ -73,7 +76,10 @@ export const brandColors = {
   backgroundGray,
   lightBackgroundGray,
   border,
-  lightBorder
+  lightBorder,
+  lighterBorder,
+  lightText,
+  mediumText
 }
 
 export const colors = {

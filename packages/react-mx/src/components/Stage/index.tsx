@@ -6,6 +6,8 @@ import ComponentContainer from './ComponentContainer'
 // @ts-ignore
 import checkerBoardImage from './checkerboard.png'
 import useCheckerboard from '../../hooks/preview/useCheckerboard'
+import CodePreview from '../CodePreview'
+import usePanels from '../../hooks/preview/usePanels'
 
 interface StageProps {
   showHeader?: boolean
@@ -14,6 +16,7 @@ interface StageProps {
 
 const Stage: FC<StageProps> = ({ showHeader = true, children }) => {
   const { enabled: showCheckerboard } = useCheckerboard()
+  const { isResizing } = usePanels()
   return (
     <Flex
       direction="column"
@@ -24,9 +27,10 @@ const Stage: FC<StageProps> = ({ showHeader = true, children }) => {
       backgroundImage={showCheckerboard ? `url(${checkerBoardImage})` : 'none'}
     >
       {showHeader ? <PreviewHeader /> : null}
-      <Frame style={{ width: '100%', height: '100%' }}>
+      <Frame style={{ width: '100%', height: '100%', pointerEvents: isResizing ? 'none' : 'auto' }}>
         <ComponentContainer>{children}</ComponentContainer>
       </Frame>
+      <CodePreview />
     </Flex>
   )
 }
