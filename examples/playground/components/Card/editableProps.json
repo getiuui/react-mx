@@ -3,7 +3,7 @@
     "type": "input",
     "valueType": "String",
     "default": "Card Title",
-    "isVisibleByDefault": true,
+    "isRequired": true,
     "label": "Title",
     "controlProps": {
       "placeholder": "enter card title"

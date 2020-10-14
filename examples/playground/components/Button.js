@@ -3,7 +3,7 @@ const Button = ({
   text = 'Button',
   width = 100,
   height = 30,
-  disabled = true,
+  disabled = false,
   style = { background: 'white' },
   onClick = () => {}
 }) => (
