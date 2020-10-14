@@ -1,3 +1,4 @@
+import { Component } from '@react-mx/core'
 import io from 'socket.io-client'
 import { TypedEmitter } from 'tiny-typed-emitter'
 
@@ -14,11 +15,13 @@ const defaultConfig: MXClientConfig = {
 interface ClientEvents {
   connect: () => void
   disconnect: () => void
+  component: (component: Component) => void
 }
 
 export default class Client extends TypedEmitter<ClientEvents> {
   constructor(cfg?: MXClientConfig) {
     super()
+    this.setMaxListeners(1000) // @todo check if ca be avoided by not usgin SWR + several useCompoinents?
     this.setConfig(cfg || defaultConfig)
     this.socket = io(`${this.config.host}:${this.config.port}`, {
       autoConnect: false,
@@ -68,6 +71,10 @@ export default class Client extends TypedEmitter<ClientEvents> {
     this.socket.on('disconnect', () => {
       this.connected = false
       this.emit('disconnect')
+    })
+
+    this.socket.on('component', component => {
+      this.emit('component', component)
     })
 
     this.socket.connect()

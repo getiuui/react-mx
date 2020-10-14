@@ -1,20 +1,18 @@
 import React, { FC, Ref, forwardRef } from 'react'
-import { Control, InputControl, SelectControl } from '@react-mx/core'
+import { Control, InputControl, SelectControl, SwitchControl } from '@react-mx/core'
 import FormItem, { FormItemProps } from 'antd/lib/form/FormItem'
 // import { FormControl, FormLabel, FormControlProps } from '@chakra-ui/core'
 import { toPascalCase, toTextCase } from 'js-convert-case'
-import { InputControlProps } from './Input'
-import { SelectControlProps } from './Select'
 import Input from './Input'
+import Switch from './Switch'
+import useProp from '../../hooks/common/useProp'
+import { mediumText } from '../../ds/theme'
 // import { Select } from './Select'
 
-type ControlProps = Omit<InputControl | SelectControl, 'key' | 'onChange'> & {
+type ControlProps = Omit<InputControl | SelectControl | SwitchControl, 'key' | 'type' | 'onChange'> & {
   ref: Ref<FC<ControlProps>>
-  propKey?: string
-  value?: any
+  propKey: string
   containerProps?: FormItemProps | object | null | undefined
-  controlProps?: InputControlProps | SelectControlProps
-  onChange: (value: any) => void
 }
 
 const Control = forwardRef<FC<ControlProps>, ControlProps>((props: ControlProps, ref: Ref<FC<ControlProps>>) => (
@@ -22,30 +20,21 @@ const Control = forwardRef<FC<ControlProps>, ControlProps>((props: ControlProps,
 ))
 
 const ControlBase: FC<ControlProps> = ({
-  ref,
+  // ref,
   propKey,
-  type,
-  label,
-  placeholder,
-  value,
-  defaultValue,
-  containerProps,
-  controlProps,
-  transform,
-  transformParams,
-  validate,
-  validateParams,
-  onChange,
-  ...props
+  containerProps
+  // ...props
 }) => {
-  const onValueChange = (value: any) => {
-    // apply transformers and validators
+  const { value, prop, setValue } = useProp(propKey)
 
-    onChange(value !== defaultValue ? value : undefined)
+  const { default: defaultValue, label, type, controlProps /*, isRequired */ } = prop || {}
+  const onValueChange = (value: any) => {
+    setValue(value !== defaultValue ? value : undefined)
   }
 
   const _label: any = label || toPascalCase(propKey)
-  const _placeholder = placeholder || toTextCase(defaultValue?.toString() || propKey)
+  const _placeholder =
+    (controlProps ? controlProps.placeholder : undefined) || toTextCase(defaultValue?.toString() || propKey)
 
   return (
     <FormItem
@@ -57,7 +46,8 @@ const ControlBase: FC<ControlProps> = ({
       colon={false}
       {...containerProps}
       style={{
-        marginBottom: 0
+        marginBottom: 0,
+        color: mediumText
       }}
     >
       {type === 'input' ? (
@@ -65,8 +55,15 @@ const ControlBase: FC<ControlProps> = ({
           propKey={propKey}
           placeholder={_placeholder}
           controlProps={controlProps}
-          {...props}
           value={value}
+          onChange={onValueChange as any}
+        />
+      ) : null}
+      {type === 'switch' ? (
+        <Switch
+          propKey={propKey}
+          controlProps={controlProps}
+          value={value !== undefined ? value : defaultValue}
           onChange={onValueChange as any}
         />
       ) : null}

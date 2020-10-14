@@ -15,6 +15,5 @@ export type SelectOption = SelectOptionObject | SelectOptionValueLabel | string 
 export type SelectType = 'select'
 
 export type SelectControl = Control<SelectType> & {
-  type: SelectType
   options: Array<SelectOption>
 }

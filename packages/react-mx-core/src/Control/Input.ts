@@ -2,6 +2,4 @@ import { Control } from './'
 
 export type InputType = 'input'
 
-export type InputControl = Control<InputType> & {
-  type: InputType
-}
+export type InputControl = Control<InputType>

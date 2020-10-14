@@ -1,15 +1,13 @@
 import { SelectType } from './Select'
 import { InputType } from './Input'
+import { SwitchType } from './Switch'
 
 export type ControlBase = {
   key: string
-  type: SelectType | InputType
+  type: SelectType | InputType | SwitchType
   label?: string | null
-  placeholder?: string
   value?: string | number | null | undefined
-  defaultValue?: string | number | null | undefined
-  default?: boolean
-  required?: boolean
+  default?: object | boolean | string | number | null | undefined
   validate?: string | Function
   validateParams?: Array<any> | any
   transform?: string | Function
@@ -18,5 +16,5 @@ export type ControlBase = {
 }
 
 export type Control<T> = ControlBase & {
-  type: string | T
+  type: T | string
 }
