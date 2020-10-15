@@ -1,6 +1,6 @@
 {
   "name": "@react-mx/webpack-plugin",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "webpack plugin for react-mx",
   "repository": {
@@ -36,12 +36,12 @@
     "webpack": "^4.44.1"
   },
   "dependencies": {
+    "@react-mx/client": "1.0.0",
+    "@react-mx/parser": "1.0.0",
+    "@react-mx/server": "1.0.0",
     "path-exists": "^4.0.0",
     "react-syntax-highlighter": "^15.2.1",
-    "webpack-inject-plugin": "^1.5.4",
-    "@react-mx/client": "*",
-    "@react-mx/parser": "*",
-    "@react-mx/server": "*"
+    "webpack-inject-plugin": "^1.5.4"
   },
   "publishConfig": {
     "access": "public"

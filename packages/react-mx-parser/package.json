@@ -1,6 +1,6 @@
 {
   "name": "@react-mx/parser",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "code parser for react-mx",
   "repository": {
@@ -27,11 +27,11 @@
     "node": ">=10"
   },
   "devDependencies": {
-    "tsdx": "^0.13.3",
-    "@react-mx/core": "*"
+    "@react-mx/core": "*",
+    "tsdx": "^0.13.3"
   },
   "dependencies": {
-    "@react-mx/core": "*",
+    "@react-mx/core": "1.0.0",
     "ora": "^5.1.0",
     "path-exists": "^4.0.0",
     "react-docgen": "^5.3.0",
