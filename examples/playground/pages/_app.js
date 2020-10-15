@@ -1,7 +1,7 @@
 import React from 'react'
 import App from 'next/app'
 
-import 'react-mx-preview/react-mx.build.css'
+import '@react-mx/preview/dist/react-mx-preview.build.css'
 
 class MyApp extends App {
   render() {

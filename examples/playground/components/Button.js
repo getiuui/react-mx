@@ -1,4 +1,4 @@
-import { Input as MXInput } from 'react-mx-preview'
+import { Input as MXInput } from '@react-mx/preview'
 const Button = ({
   text = 'Button',
   width = 100,

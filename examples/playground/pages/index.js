@@ -1,4 +1,4 @@
-import { Preview, loader } from '@react-mx-preview'
+import { Preview, loader } from '@react-mx/preview'
 
 const componentLoader = loader({
   components: file => import(`../components/${file}`),

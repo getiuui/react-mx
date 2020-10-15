@@ -9,7 +9,7 @@ module.exports = {
       less({
         insert: true,
         include: ['**/*.less', '**/*.css'],
-        output: 'dist/react-mx.build.css',
+        output: 'dist/react-mx-preview.build.css',
         option: {
           javascriptEnabled: true,
           modifyVars: antVars.default
