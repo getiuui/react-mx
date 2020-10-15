@@ -1,12 +1,12 @@
 {
-  "name": "react-mx",
+  "name": "@react-mx/preview",
   "version": "1.0.0",
   "license": "MIT",
   "description": "create react components visually",
   "repository": {
     "type": "git",
     "url": "https://github.com/getiuui/react-mx.git",
-    "directory": "packages/react-mx"
+    "directory": "packages/react-mx-preview"
   },
   "author": "https://iuui.io",
   "scripts": {
@@ -16,7 +16,7 @@
     "lint": "tsdx lint"
   },
   "main": "dist/index.js",
-  "module": "dist/react-mx.esm.js",
+  "module": "dist/preview.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "README.md",
@@ -72,5 +72,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "f1c477eaae0d45c6f87097e840cae2184e922322"
+  "gitHead": "9a85112530149d4e59418e7348c3962dcaba19d9"
 }
