@@ -1,6 +1,6 @@
 {
   "name": "@react-mx/server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "description": "server for react-mx",
   "repository": {
@@ -34,8 +34,8 @@
     "tsdx": "^0.13.3"
   },
   "dependencies": {
-    "@react-mx/core": "1.0.0",
-    "@react-mx/parser": "1.0.0",
+    "@react-mx/core": "1.0.1",
+    "@react-mx/parser": "1.0.1",
     "chokidar": "^3.4.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
