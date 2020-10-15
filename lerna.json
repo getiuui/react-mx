@@ -4,7 +4,7 @@
     "access": "public"
   },
   "npmClient": "npm",
-  "packages": ["packages/*", "examples/*"],
+  "packages": ["packages/*"],
   "version": "independent",
   "command": {
     "version": {
