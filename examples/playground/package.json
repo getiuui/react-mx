@@ -4,6 +4,7 @@
   "main": "index.js",
   "author": "Cristian Moldovan",
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "next": "^9.5.3",
     "react": "^16.13.1",
