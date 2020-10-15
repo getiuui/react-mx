@@ -5,5 +5,15 @@
   },
   "npmClient": "npm",
   "packages": ["packages/*", "examples/*"],
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "version": {
+      "exact": true
+    },
+    "publish": {
+      "npmClient": "npm",
+      "allowBranch": ["master", "development"],
+      "registry": "https://registry.npmjs.org/"
+    }
+  }
 }
