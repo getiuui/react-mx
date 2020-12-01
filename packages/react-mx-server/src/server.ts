@@ -5,7 +5,7 @@ import * as socketIO from 'socket.io'
 import Cache, { MXCacheConfig, defaultCacheConfig } from './cache'
 import CodeAnalyzer, { defaultAnalyzerConfig, MXCodeAnalyzerConfig } from './analyzer'
 import Handler from './handler'
-import { Component } from '@react-mx/core'
+import { ComponentsLibrary } from '@react-mx/core'
 
 export type MXServerConfig = MXCodeAnalyzerConfig &
   MXCacheConfig & {
@@ -79,8 +79,8 @@ export default class Server {
 
       socket.on('request', this.handler.handle.bind(this.handler))
 
-      this.analyzer.on('component', (component: Component) => {
-        socket.emit('component', component)
+      this.analyzer.on('library', (library: ComponentsLibrary) => {
+        socket.emit('library', library)
       })
 
       socket.on('disconnect', () => {

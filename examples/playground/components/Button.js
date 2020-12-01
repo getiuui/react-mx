@@ -1,6 +1,9 @@
-import { Input as MXInput } from '@react-mx/preview'
-const Button = ({
+export const Test = 'aaa'
+export const TestBtn = ({ label = 'test' }) => <p>{label}</p>
+
+export const Button = ({
   text = 'Button',
+  info = 'info',
   width = 100,
   height = 30,
   disabled = false,
@@ -8,27 +11,8 @@ const Button = ({
   onClick = () => {}
 }) => (
   <button disabled={disabled} style={{ width, height, ...style }}>
-    {text}
+    {text} - {info}
   </button>
 )
-
-// Button.editableProps = {
-//   text: MXInput({
-//     default: 'Button',
-//     valueType: String,
-//     isVisibleByDefault: true
-//   }),
-//   width: MXInput({
-//     valueType: Number,
-//     default: 100
-//   }),
-//   height: MXInput({
-//     valueType: Number,
-//     default: 30,
-//     controlProps: {
-//       type: 'number'
-//     }
-//   })
-// }
 
 export default Button

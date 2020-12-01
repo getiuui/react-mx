@@ -1,30 +1,15 @@
-import vm from 'vm'
 import { extname, basename, dirname } from 'path'
-import { readFileSync, statSync } from 'fs'
+import { statSync } from 'fs'
 import { sync as pathExists } from 'path-exists'
-import reactTsDocgen from 'react-docgen-typescript'
-import reactJsDocgen from 'react-docgen'
-import { EditableProp, EditableProps, EditablePropType, Component } from '@react-mx/core'
+
+import { Component, EditableProps } from '@react-mx/core'
 import ora from 'ora'
-
-const typeToControlMap = {
-  string: 'input',
-  number: 'input',
-  boolean: 'switch',
-  object: 'object',
-  array: 'select'
-}
-
-type MXParserConfig = {
-  cwd: string | undefined | null
-}
-
-type ComponentFiles = {
-  displayAlias: string | null | undefined // displayName with container info; ex: for /components/Card/index.js => container/Card
-  componentName: string | null | undefined // at this stage we can only guess the component namer
-  definitionFile: string | null | undefined
-  editablePropsFile?: string | null | undefined
-}
+import { MXParserConfig, LibraryFiles, DefintionData, EditablePropsData } from './types'
+import processTypescriptFile from './processor/ts'
+import processJavascriptFile from './processor/js'
+import processEditablePropsFile from './processor/editableProps'
+import { ComponentsLibrary } from '@react-mx/core'
+import { findComponentExportInfo } from './processor/ast'
 
 const defaultConfig: MXParserConfig = {
   cwd: ''
@@ -44,109 +29,26 @@ export default class Parser {
     }
   }
 
-  private convertDocgenPropsToEditableProps(props: object): EditableProps {
-    const propKeys = Object.keys(props)
-    if (!propKeys || propKeys.length === 0) return {}
-
-    const editableProps: EditableProps = {}
-
-    propKeys.forEach(propKey => {
-      const rawProp = props[propKey]
-
-      let defaultValue: any = null
-      if (
-        rawProp.defaultValue !== undefined &&
-        rawProp.defaultValue.value !== undefined &&
-        typeof rawProp.defaultValue.value === 'string'
-      ) {
-        try {
-          defaultValue = vm.runInNewContext(rawProp.defaultValue.value)
-        } catch (error) {
-          console.error(`default transoform error key: ${propKey}`, error)
-        }
-      }
-
-      let valueType: EditablePropType = defaultValue !== undefined ? typeof defaultValue : typeof ''
-
-      if (valueType === 'function') {
-        defaultValue = rawProp.defaultValue.value
-      }
-      // extract type info if present from ts type
-
-      const prop: EditableProp = {
-        type: typeToControlMap[valueType] || 'input',
-        valueType,
-        key: propKey,
-        ...(defaultValue
-          ? {
-              default: defaultValue
-            }
-          : {})
-      }
-
-      editableProps[propKey] = prop
-    })
-    return editableProps
-  }
-
-  private processEditablePropsFile(file: string) {
-    // hanlde change of editable props file of a component
-    try {
-      const content = readFileSync(`${this.config.cwd}/${file}`, 'utf-8')
-      const editableProps = JSON.parse(content)
-
-      return {
-        editableProps
-      }
-    } catch (error) {
-      console.error(`Failed processiong ${file}`, error)
-      return undefined
-    }
-    //try to determine the name of the component
-    //check is there's a missmatchbetween props (new props in file or deleted)
-  }
-
-  private processJavascriptFile(file: string): any {
-    const jsContent = readFileSync(`${this.config.cwd}/${file}`)
-    const { displayName, props } = reactJsDocgen.parse(jsContent) as any
-
-    const editableProps = this.convertDocgenPropsToEditableProps(props)
-    return { displayName, editableProps }
-  }
-
-  private processTypescriptFile(file: string): any {
-    const options = {
-      savePropValueAsString: true
-    }
-
-    const { displayName, props } = reactTsDocgen.parse(`${this.config.cwd}/${file}`, options) as any
-    const editableProps = this.convertDocgenPropsToEditableProps(props)
-    return { displayName, editableProps }
-  }
-
   // @ts-ignore
-  public processDefinitionFile(file: string, tsconfigPath?: string) {
+  public processDefinitionFile(file: string, tsconfigPath?: string): DefintionData {
     const ext = extname(file)
 
     if (!pathExists(file)) throw new Error(`React MX analiser: ${file} does not exist`)
     if (!statSync(file).isFile()) throw new Error(`Invalid file ${file}`)
 
     if (ext === '.ts' || ext === '.tsx') {
-      return this.processTypescriptFile(file)
+      return processTypescriptFile(file, this.config.cwd as string)
     }
 
     if (ext === '.js') {
-      return this.processJavascriptFile(file)
+      return processJavascriptFile(file, this.config.cwd as string)
     }
   }
 
-  private resolveComponentFiles(file: string): ComponentFiles {
-    const componentFiles: ComponentFiles = {
-      displayAlias: null,
-      componentName: null,
-      definitionFile: null,
-      editablePropsFile: null
-    }
+  private resolveLocalLibraryFiles(file: string): LibraryFiles {
+    let libraryName: string | null = null
+    let definitionFile: string = ''
+    let editablePropsFile: string | null = null
 
     const fileName = basename(file)
     const ext = extname(file)
@@ -154,9 +56,8 @@ export default class Parser {
 
     if (fileName.toLowerCase().replace(ext, '') === 'editableprops') {
       // this is the editable props file, need to find it's component file
-      componentFiles.displayAlias = folderName.replace(`${this.config.cwd}/`, '')
-      componentFiles.componentName = basename(folderName)
-      componentFiles.editablePropsFile = file
+      libraryName = folderName.replace(`${this.config.cwd}/`, '')
+      editablePropsFile = file
 
       // try to find the component definition
       const possibleJSDefinitionPath = file.replace(fileName, 'index.js')
@@ -164,85 +65,128 @@ export default class Parser {
       const possibleTSXDefinitionPath = file.replace(fileName, 'index.tsx')
 
       if (pathExists(possibleJSDefinitionPath)) {
-        componentFiles.definitionFile = possibleJSDefinitionPath
+        definitionFile = possibleJSDefinitionPath
       } else if (pathExists(possibleTSDefinitionPath)) {
-        componentFiles.definitionFile = possibleJSDefinitionPath
+        definitionFile = possibleJSDefinitionPath
       } else if (pathExists(possibleTSXDefinitionPath)) {
-        componentFiles.definitionFile = possibleTSXDefinitionPath
+        definitionFile = possibleTSXDefinitionPath
       }
     } else if (fileName.toLowerCase().replace(ext, '') === 'index') {
       // this is the index file within a folder with the componet definition
       // the folder might contain editableProps.json or editableProps.js files
-      componentFiles.displayAlias = folderName.replace(`${this.config.cwd}/`, '')
+      libraryName = folderName.replace(`${this.config.cwd}/`, '')
       const possibleEditablePropsJSPath = file.replace(fileName, 'editableProps.jso')
       const possibleEditablePropsJSONPath = file.replace(fileName, 'editableProps.json')
 
       if (pathExists(possibleEditablePropsJSPath)) {
-        componentFiles.editablePropsFile = possibleEditablePropsJSPath
+        editablePropsFile = possibleEditablePropsJSPath
       } else if (pathExists(possibleEditablePropsJSONPath)) {
-        componentFiles.editablePropsFile = possibleEditablePropsJSONPath
+        editablePropsFile = possibleEditablePropsJSONPath
       }
 
-      componentFiles.componentName = basename(folderName)
-      componentFiles.definitionFile = file
+      definitionFile = file
     } else {
       // this is a plain js / ts file, so no editableProps will be present
-      componentFiles.displayAlias = `${folderName
-        .replace(`${this.config.cwd}/`, '')
-        .replace(ext, '')}/${fileName.replace(ext, '')}`
-      componentFiles.componentName = fileName.replace(ext, '')
-      componentFiles.definitionFile = file
+      libraryName = `${folderName.replace(`${this.config.cwd}/`, '').replace(ext, '')}/${fileName.replace(ext, '')}`
+      definitionFile = file
     }
 
-    return componentFiles
+    return {
+      libraryName,
+      definitionFile,
+      editablePropsFile
+    }
   }
 
-  public async processFile(file: string): Promise<Component | undefined> {
+  public async processFile(file: string): Promise<ComponentsLibrary | undefined> {
     const spinner = ora(`⚛️ ReactMX: ${file}`).start()
+
     try {
-      const componentFiles: ComponentFiles = await this.resolveComponentFiles(file)
+      const libraryFiles: LibraryFiles = await this.resolveLocalLibraryFiles(file)
 
-      const definitionData = componentFiles.definitionFile
-        ? await this.processDefinitionFile(componentFiles.definitionFile)
+      const library: ComponentsLibrary = {
+        key: `${libraryFiles.libraryName}@*`,
+        name: libraryFiles.libraryName,
+        version: '*',
+        source: 'local',
+        components: [],
+        exports: {}
+      }
+
+      const definitionData: DefintionData | null | undefined = libraryFiles.definitionFile
+        ? await this.processDefinitionFile(libraryFiles.definitionFile)
         : null // @todo: add tscofig info
-      const editablePropsData = componentFiles.editablePropsFile
-        ? await this.processEditablePropsFile(componentFiles.editablePropsFile)
+
+      const editablePropsData: EditablePropsData | null | undefined = libraryFiles.editablePropsFile
+        ? await processEditablePropsFile(libraryFiles.editablePropsFile, this.config.cwd as string)
         : null
-      const component: Component = {
-        key: componentFiles.displayAlias as string,
-        name: definitionData ? definitionData.displayName : componentFiles.displayAlias,
-        definitinFile: componentFiles.definitionFile
-          ? componentFiles.definitionFile?.replace(`${this.config.cwd}/`, '')
-          : '',
-        editablePropsFile: componentFiles.editablePropsFile?.replace(`${this.config.cwd}/`, ''),
-        editableProps: {}
-      }
 
-      // apply the data extracted from source
-      if (definitionData && definitionData.editableProps) {
-        Object.keys(definitionData.editableProps).map(propKey => {
-          component.editableProps[propKey] = {
-            ...definitionData.editableProps[propKey],
-            explicit: false
+      if (definitionData) {
+        const { components, ast } = definitionData
+        const componentNames = Object.keys(components)
+
+        componentNames.map(name => {
+          const componentData = components[name]
+
+          const editableProps: EditableProps = {}
+          // apply the data extracted from source
+          if (componentData && componentData.editableProps) {
+            Object.keys(componentData.editableProps).map(propKey => {
+              editableProps[propKey] = {
+                ...componentData.editableProps[propKey],
+                explicit: false
+              }
+            })
+          }
+
+          // apply the data extracted from editableProps file
+          // if props already exists, override, and mark is explicit
+          if (editablePropsData) {
+            const componentProps = editablePropsData[name]
+            if (componentProps) {
+              Object.keys(componentProps).map(propKey => {
+                // if the prop was already read form source, replace it's definition, but keep the sourceProps info
+                // this is to allow later updating of props from ui; EX: user has changed the props but has to update their editable props info
+                editableProps[propKey] = {
+                  propDataFromSource: editableProps[propKey] || null,
+                  ...componentProps[propKey],
+                  explicit: true
+                }
+              })
+            }
+          }
+
+          const exportInfo = findComponentExportInfo(ast, componentData.displayName)
+          const { exportType, exportName } = exportInfo || {}
+
+          const component: Component = {
+            key: `${library.key} - ${componentData.displayName}`,
+            libraryName: library.name,
+            libraryVersion: library.version,
+            name: componentData.displayName,
+            definitionFile: libraryFiles.definitionFile.replace(`${this.config.cwd}/`, ''),
+            editablePropsFile: libraryFiles.editablePropsFile?.replace(`${this.config.cwd}/`, ''),
+            editableProps,
+            exportName,
+            exportType
+          }
+
+          // add info about exported components
+          if (!library.components.includes(component)) {
+            if (component.exportType === 'default') {
+              library.exports['default'] = component.name
+            } else if (component.exportType === 'named') {
+              library.exports[component.exportName as string] = component.name
+            }
+
+            library.components.push(component)
           }
         })
       }
 
-      // apply the data extracted from editableProps file
-      // if props already exists, override, and mark is explicit
-      if (editablePropsData && editablePropsData.editableProps) {
-        Object.keys(editablePropsData.editableProps).map(propKey => {
-          // if the prop was already read form source, replace it's definition, but keep the sourceProps info
-          // this is to allow later updating of props from ui; EX: user has changed the props but has to update their editable props info
-          component.editableProps[propKey] = {
-            propDataFromSource: component.editableProps[propKey] || null,
-            ...editablePropsData.editableProps[propKey],
-            explicit: true
-          }
-        })
-      }
       spinner.succeed(`⚛️ ReactMX: ${file} analysed`)
-      return component
+
+      return library
     } catch (error) {
       spinner.fail(`⚛️ ReactMX: ${file} failed to process:`)
       console.error(error)

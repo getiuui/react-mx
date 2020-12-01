@@ -1,4 +1,4 @@
-export type FileLoader = (path: string) => any
+export type FileLoader = (library: string, exportName?: string | null | undefined) => any
 
 export type Props = {
   [key: string]: any

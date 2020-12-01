@@ -6,12 +6,17 @@ export default class Handler {
   }
 
   private cache: Cache
-  public async getComponents(): Promise<Array<any>> {
-    return this.cache.getAllComponents()
+
+  public async libraries(): Promise<Array<any>> {
+    return this.cache.getAllLibraries()
   }
 
-  public async component(name: string): Promise<any> {
-    return this.cache.getComponentData(name)
+  public async components(): Promise<Array<any>> {
+    return this.cache.getAllLibraries()
+  }
+
+  public async library(name: string, version: string = '*'): Promise<any> {
+    return this.cache.getLibrary(name, version)
   }
 
   //@ts-ignore
@@ -21,7 +26,20 @@ export default class Handler {
       let status: boolean = true
       switch (action) {
         case 'components':
-          data = await this.getComponents()
+          const libraries = await this.libraries()
+
+          data = []
+
+          libraries.map(library => {
+            if (library && library.components && library.components.length > 0) {
+              library.components.map(component => {
+                data.push(component)
+              })
+            }
+          })
+          break
+        case 'libraries':
+          data = await this.libraries()
           break
         default:
           throw new Error(`Invalid action: ${action}`)

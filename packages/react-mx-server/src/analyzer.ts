@@ -2,7 +2,7 @@ import chokidar, { FSWatcher } from 'chokidar'
 import { TypedEmitter } from 'tiny-typed-emitter'
 import Cache from './cache'
 import Parser from '@react-mx/parser'
-import { Component } from '@react-mx/core'
+import { Component, ComponentsLibrary } from '@react-mx/core'
 import computeChecksum from './utils/checksum'
 
 export type MXCodeAnalyzerConfig = {
@@ -48,6 +48,7 @@ export const defaultAnalyzerConfig: MXCodeAnalyzerConfig = {
 
 interface AnalyzerEvents {
   component: (component: Component) => void
+  library: (library: ComponentsLibrary) => void
 }
 
 export class CodeAnalyzer extends TypedEmitter<AnalyzerEvents> {
@@ -91,11 +92,12 @@ export class CodeAnalyzer extends TypedEmitter<AnalyzerEvents> {
 
   public async processFile(file: string) {
     if (this.config.ignoreChecksum || (await this.hasFileChanged(file))) {
-      const component: Component | undefined = await this.parser.processFile(file)
-      if (component) {
-        this.cache.saveComponentData(component)
+      const library = await this.parser.processFile(file)
 
-        this.emit('component', component)
+      if (library) {
+        this.cache.saveLibraryData(library)
+
+        this.emit('library', library)
       }
     }
   }

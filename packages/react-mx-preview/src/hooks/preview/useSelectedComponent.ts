@@ -11,7 +11,7 @@ export const useSelectedComponent = (): {
   Component: any
   component: Component | undefined
   loading: boolean
-  setSelectedComponent(key: string)
+  setSelectedComponent(library: string)
 } => {
   const key = useSubscription(Preview.selectedComponentKey)
 
@@ -29,9 +29,13 @@ export const useSelectedComponent = (): {
   useEffect(() => {
     const load = async () => {
       const loadComponent = Core.getLoader()
-      const Component = component ? await loadComponent(component?.definitinFile) : undefined
-      //@ts-ignore
-      setComponent(Component)
+      if (component) {
+        const Component = component
+          ? await loadComponent(component.definitionFile as string, component.exportName)
+          : undefined
+
+        setComponent(Component)
+      }
     }
 
     load()
