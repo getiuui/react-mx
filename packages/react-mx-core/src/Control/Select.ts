@@ -1,3 +1,4 @@
+import { EditablePropType } from '../'
 import { Control } from './'
 
 export type SelectOptionValueLabel = {
@@ -6,14 +7,18 @@ export type SelectOptionValueLabel = {
 }
 
 export type SelectOptionObject = {
-  value: object | string | number | boolean | null | undefined
+  value: EditablePropType | null | undefined
   label: string
 }
 
 export type SelectOption = SelectOptionObject | SelectOptionValueLabel | string | number | null | undefined
 
+export const SELECT = 'select'
+
 export type SelectType = 'select'
 
-export type SelectControl = Control<SelectType> & {
+export type SelectControlConfig = {
   options: Array<SelectOption>
 }
+
+export type SelectControl = Control<SelectType> & SelectControlConfig

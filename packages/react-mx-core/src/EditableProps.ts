@@ -1,6 +1,9 @@
-import { SelectType } from './Control/Select'
+import { SelectType, SelectControlConfig } from './Control/Select'
 import { InputType } from './Control/Input'
 import { SwitchType } from './Control/Switch'
+import { ListType, ListControlConfig } from './Control/List'
+import { JSONEditorType } from './Control/JSONEditor'
+import { CodeEditorType } from './Control/CodeEditor'
 
 export type EditablePropType =
   | 'string'
@@ -12,6 +15,7 @@ export type EditablePropType =
   | 'object'
   | 'function'
   | 'array'
+  | string
   | Array<EditablePropType>
 
 export type EditablePropSuggestionValue = {
@@ -27,15 +31,18 @@ export type EditablePropSuggestionType = {
 
 export type EditablePropSuggestion = EditablePropSuggestionValue | EditablePropSuggestionType
 
+export type EditablePropControl = SelectType | InputType | SwitchType | ListType | JSONEditorType | CodeEditorType
+
 export type EditableProp = {
   key?: string
-  type: SelectType | InputType | SwitchType
   valueType: EditablePropType
-  suggestios?: Array<EditablePropSuggestion>
-  default?: EditablePropType
+  suggestions?: Array<EditablePropSuggestion>
+  default?: EditablePropType | null | undefined
+  control: EditablePropControl
+  controlConfig?: ListControlConfig | SelectControlConfig
+  controlProps?: any
   isRequired?: boolean
   label?: string
-  controlProps?: any
   validate?: string | Function
   validateParams?: Array<any> | any
   transform?: string | Function

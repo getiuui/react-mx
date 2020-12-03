@@ -1,10 +1,8 @@
-import { SelectType } from './Select'
-import { InputType } from './Input'
-import { SwitchType } from './Switch'
+import { EditablePropControl } from '../EditableProps'
 
 export type ControlBase = {
   key: string
-  type: SelectType | InputType | SwitchType
+  type: EditablePropControl
   label?: string | null
   value?: string | number | null | undefined
   default?: object | boolean | string | number | null | undefined
